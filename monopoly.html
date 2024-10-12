@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>6x6 Monopoly Board with Monsters - One Round</title>
+    <title>6x6 Monopoly Board with Pixel Art Characters - One Round</title>
     <style>
         body {
             display: flex;
@@ -39,37 +39,40 @@
             font-size: 12px;
             padding: 5px;
         }
-        .corner {
-            background-color: #f9f9f9;
-            font-weight: bold;
-        }
+        .corner { background-color: #f9f9f9; font-weight: bold; }
         .property { background-color: #FFA07A; }
         .railroad { background-color: #C0C0C0; }
         .utility { background-color: #98FB98; }
         .tax { background-color: #FFB6C1; }
         .card { background-color: #87CEFA; }
-        .monster {
-            width: 40px;
-            height: 40px;
+        .character {
+            width: 64px;
+            height: 64px;
             position: absolute;
             transition: all 0.5s ease;
         }
-        #controls {
-            margin-top: 20px;
-        }
-        button {
-            font-size: 16px;
-            padding: 10px 20px;
-        }
-        #gameStatus {
-            margin-top: 10px;
+        #controls { margin-top: 20px; }
+        button { font-size: 16px; padding: 10px 20px; }
+        #gameStatus { margin-top: 10px; font-weight: bold; }
+        #currentCharacter {
+            margin-bottom: 10px;
+            font-size: 18px;
             font-weight: bold;
+        }
+        .character-indicator {
+            display: inline-block;
+            width: 32px;
+            height: 32px;
+            margin-right: 10px;
+            vertical-align: middle;
         }
     </style>
 </head>
 <body>
     <div class="game-container">
+        <div id="currentCharacter"></div>
         <div class="board">
+            <!-- Board spaces remain the same as before -->
             <div class="space corner">GO</div>
             <div class="space property">Mediterranean Avenue</div>
             <div class="space card">Community Chest</div>
@@ -121,61 +124,274 @@
             24, 18, 12, 6
         ];
 
-        const monsters = [
-            { color: '#FF0000', position: 0, completed: false },
-            { color: '#00FF00', position: 0, completed: false },
-            { color: '#0000FF', position: 0, completed: false }
+        const characters = [
+                {
+            name: 'Fighter',
+            svg: `
+                <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Helmet with horns -->
+                    <rect x="10" y="4" width="12" height="6" fill="#808080"/>
+                    <rect x="8" y="6" width="2" height="4" fill="#808080"/>
+                    <rect x="22" y="6" width="2" height="4" fill="#808080"/>
+                    <rect x="6" y="8" width="2" height="2" fill="#C0C0C0"/>
+                    <rect x="24" y="8" width="2" height="2" fill="#C0C0C0"/>
+                    
+                    <!-- Face -->
+                    <rect x="12" y="10" width="8" height="4" fill="#FDB863"/>
+                    <rect x="14" y="12" width="2" height="2" fill="#000000"/>
+                    <rect x="18" y="12" width="2" height="2" fill="#000000"/>
+                    
+                    <!-- Dark armor body -->
+                    <rect x="10" y="14" width="12" height="10" fill="#505050"/>
+                    <rect x="12" y="16" width="8" height="6" fill="#606060"/>
+                    
+                    <!-- Arms -->
+                    <rect x="8" y="14" width="2" height="8" fill="#505050"/>
+                    <rect x="22" y="14" width="2" height="8" fill="#505050"/>
+                    
+                    <!-- Legs -->
+                    <rect x="10" y="24" width="4" height="6" fill="#505050"/>
+                    <rect x="18" y="24" width="4" height="6" fill="#505050"/>
+                    
+                    <!-- Large sword -->
+                    <rect x="24" y="12" width="2" height="14" fill="#C0C0C0"/>
+                    <rect x="23" y="26" width="4" height="2" fill="#C0C0C0"/>
+                    <rect x="26" y="14" width="2" height="10" fill="#A0A0A0"/>
+                </svg>
+            `,
+            position: 0,
+            completed: false
+        },
+        {
+    name: 'Crusader',
+    svg: `
+        <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+            <!-- Helmet -->
+            <rect x="10" y="4" width="12" height="6" fill="#FFFFFF"/>
+            <rect x="12" y="10" width="8" height="2" fill="#FFD700"/>
+            
+            <!-- Face -->
+            <rect x="14" y="12" width="4" height="2" fill="#FDB863"/>
+            <rect x="15" y="12" width="2" height="1" fill="#000000"/>
+            
+            <!-- White and red armor body -->
+            <rect x="10" y="14" width="12" height="10" fill="#FFFFFF"/>
+            <rect x="12" y="16" width="8" height="6" fill="#FF0000"/>
+            <rect x="14" y="18" width="4" height="2" fill="#FFFFFF"/>
+            
+            <!-- Cloak -->
+            <rect x="8" y="14" width="2" height="12" fill="#800000"/>
+            <rect x="22" y="14" width="2" height="12" fill="#800000"/>
+            
+            <!-- Arms -->
+            <rect x="8" y="14" width="2" height="8" fill="#FFFFFF"/>
+            <rect x="22" y="14" width="2" height="8" fill="#FFFFFF"/>
+            
+            <!-- Legs -->
+            <rect x="10" y="24" width="4" height="6" fill="#FFFFFF"/>
+            <rect x="18" y="24" width="4" height="6" fill="#FFFFFF"/>
+            
+            <!-- Shield with cross -->
+            <rect x="6" y="16" width="6" height="8" fill="#FFD700"/>
+            <rect x="8" y="18" width="2" height="4" fill="#FF0000"/>
+            <rect x="7" y="19" width="4" height="2" fill="#FF0000"/>
+            
+            <!-- Sword -->
+            <rect x="24" y="14" width="2" height="10" fill="#C0C0C0"/>
+            <rect x="23" y="24" width="4" height="2" fill="#C0C0C0"/>
+        </svg>
+    `,
+    position: 0,
+    completed: false
+},
+{
+    name: 'White Knight',
+    svg: `
+        <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+            <!-- Horse body -->
+            <rect x="4" y="18" width="20" height="10" fill="#FFFFFF"/>
+            <rect x="24" y="20" width="4" height="8" fill="#FFFFFF"/>
+            <rect x="2" y="20" width="2" height="8" fill="#FFFFFF"/>
+            
+            <!-- Horse legs -->
+            <rect x="6" y="28" width="2" height="4" fill="#FFFFFF"/>
+            <rect x="10" y="28" width="2" height="4" fill="#FFFFFF"/>
+            <rect x="18" y="28" width="2" height="4" fill="#FFFFFF"/>
+            <rect x="22" y="28" width="2" height="4" fill="#FFFFFF"/>
+            
+            <!-- Horse mane -->
+            <rect x="20" y="16" width="6" height="4" fill="#E0E0E0"/>
+            
+            <!-- Knight body in shining silver armor -->
+            <rect x="16" y="6" width="8" height="12" fill="#C0C0C0"/>
+            <rect x="18" y="8" width="4" height="8" fill="#E0E0E0"/>
+            
+            <!-- Knight helmet -->
+            <rect x="16" y="2" width="8" height="4" fill="#C0C0C0"/>
+            <rect x="18" y="6" width="4" height="2" fill="#A0A0A0"/>
+            
+            <!-- Knight arms -->
+            <rect x="14" y="8" width="2" height="6" fill="#C0C0C0"/>
+            <rect x="24" y="8" width="2" height="6" fill="#C0C0C0"/>
+            
+            <!-- Flowing white cape -->
+            <rect x="14" y="6" width="2" height="12" fill="#FFFFFF"/>
+            <rect x="12" y="10" width="2" height="10" fill="#FFFFFF"/>
+            <rect x="10" y="14" width="2" height="8" fill="#FFFFFF"/>
+            
+            <!-- Lance -->
+            <rect x="26" y="2" width="2" height="18" fill="#A0A0A0"/>
+            <polygon points="27,0 29,2 25,2" fill="#A0A0A0"/>
+            
+            <!-- Knight legs -->
+            <rect x="16" y="18" width="4" height="4" fill="#C0C0C0"/>
+            <rect x="20" y="18" width="4" height="4" fill="#C0C0C0"/>
+        </svg>
+    `,
+    position: 0,
+    completed: false
+},
+{
+    name: 'Priest',
+    svg: `
+        <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+            <!-- Halo -->
+            <circle cx="16" cy="6" r="5" fill="#FFD700" opacity="0.7"/>
+            
+            <!-- Head and face -->
+            <rect x="12" y="6" width="8" height="8" fill="#FDB863"/>
+            <rect x="14" y="10" width="2" height="2" fill="#000000"/>
+            <rect x="18" y="10" width="2" height="2" fill="#000000"/>
+            
+            <!-- Beard -->
+            <rect x="12" y="14" width="8" height="4" fill="#A0522D"/>
+            <rect x="13" y="18" width="6" height="2" fill="#A0522D"/>
+            
+            <!-- Robe body - main color white with gold trim -->
+            <rect x="10" y="18" width="12" height="12" fill="#FFFFFF"/>
+            <rect x="9" y="18" width="1" height="12" fill="#FFD700"/>
+            <rect x="22" y="18" width="1" height="12" fill="#FFD700"/>
+            <rect x="10" y="29" width="12" height="1" fill="#FFD700"/>
+            
+            <!-- Arms -->
+            <rect x="8" y="18" width="4" height="8" fill="#FFFFFF"/>
+            <rect x="20" y="18" width="4" height="8" fill="#FFFFFF"/>
+            
+            <!-- Holy symbol (cross) -->
+            <rect x="13" y="22" width="6" height="6" fill="#FFD700"/>
+            <rect x="15" y="20" width="2" height="10" fill="#FFD700"/>
+            
+            <!-- Staff -->
+            <rect x="23" y="10" width="2" height="20" fill="#8B4513"/>
+            <rect x="22" y="8" width="4" height="2" fill="#8B4513"/>
+            <circle cx="24" cy="7" r="2" fill="#FFD700"/>
+            
+            <!-- Glowing aura -->
+            <rect x="0" y="0" width="32" height="32" fill="#FFFFFF" opacity="0.1"/>
+        </svg>
+    `,
+    position: 0,
+    completed: false
+},
+{
+    name: 'Wizard',
+    svg: `
+        <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+            <!-- Pointed hat with stars -->
+            <polygon points="16,0 10,12 22,12" fill="#4B0082"/>
+            <rect x="10" y="12" width="12" height="2" fill="#4B0082"/>
+            <rect x="13" y="5" width="2" height="2" fill="#FFD700"/>
+            <rect x="18" y="8" width="2" height="2" fill="#FFD700"/>
+            
+            <!-- Face -->
+            <rect x="12" y="14" width="8" height="6" fill="#FDB863"/>
+            <rect x="14" y="16" width="2" height="2" fill="#000000"/>
+            <rect x="18" y="16" width="2" height="2" fill="#000000"/>
+            
+            <!-- Long beard -->
+            <rect x="12" y="20" width="8" height="8" fill="#A0A0A0"/>
+            <rect x="13" y="28" width="6" height="2" fill="#A0A0A0"/>
+            <rect x="14" y="30" width="4" height="2" fill="#A0A0A0"/>
+            
+            <!-- Robe body in purple -->
+            <rect x="10" y="20" width="12" height="12" fill="#800080"/>
+            <rect x="8" y="20" width="2" height="10" fill="#800080"/>
+            <rect x="22" y="20" width="2" height="10" fill="#800080"/>
+            
+            <!-- Robe sleeves -->
+            <rect x="6" y="20" width="2" height="8" fill="#800080"/>
+            <rect x="24" y="20" width="2" height="8" fill="#800080"/>
+            
+            <!-- Staff -->
+            <rect x="4" y="12" width="2" height="18" fill="#8B4513"/>
+            <circle cx="5" cy="11" r="3" fill="#1E90FF"/>
+            
+            <!-- Spellbook -->
+            <rect x="24" y="24" width="6" height="8" fill="#8B4513"/>
+            <rect x="24" y="24" width="6" height="1" fill="#FFD700"/>
+            <rect x="24" y="27" width="6" height="1" fill="#FFD700"/>
+            <rect x="24" y="30" width="6" height="1" fill="#FFD700"/>
+            
+            <!-- Magical aura -->
+            <rect x="0" y="0" width="32" height="32" fill="#1E90FF" opacity="0.1"/>
+        </svg>
+    `,
+    position: 0,
+    completed: false
+}
         ];
 
-        let currentMonster = 0;
+        let currentCharacter = 0;
         let gameOver = false;
 
-        function createMonsters() {
+        function createCharacters() {
             const boardElement = document.querySelector('.board');
-            monsters.forEach((monster, index) => {
-                const monsterElement = document.createElement('div');
-                monsterElement.className = 'monster';
-                monsterElement.id = `monster-${index}`;
-                monsterElement.style.backgroundColor = monster.color;
-                boardElement.appendChild(monsterElement);
-                updateMonsterPosition(index);
+            characters.forEach((character, index) => {
+                const characterElement = document.createElement('div');
+                characterElement.className = 'character';
+                characterElement.id = `character-${index}`;
+                characterElement.innerHTML = character.svg;
+                boardElement.appendChild(characterElement);
+                updateCharacterPosition(index);
             });
         }
 
-        function updateMonsterPosition(monsterIndex) {
-            const monster = monsters[monsterIndex];
-            const monsterElement = document.getElementById(`monster-${monsterIndex}`);
-            const spaceIndex = boardSpaces[monster.position];
+        function updateCharacterPosition(characterIndex) {
+            const character = characters[characterIndex];
+            const characterElement = document.getElementById(`character-${characterIndex}`);
+            const spaceIndex = boardSpaces[character.position];
             const spaceElement = document.querySelectorAll('.board .space')[spaceIndex];
             const rect = spaceElement.getBoundingClientRect();
             const boardRect = document.querySelector('.board').getBoundingClientRect();
 
-            monsterElement.style.left = `${rect.left - boardRect.left + rect.width / 2 - 20}px`;
-            monsterElement.style.top = `${rect.top - boardRect.top + rect.height / 2 - 20}px`;
+            // Adjust position based on character index to avoid overlap
+            const offset = 10 * (characterIndex % 3 - 1);
+            characterElement.style.left = `${rect.left - boardRect.left + rect.width / 2 - 16 + offset}px`;
+            characterElement.style.top = `${rect.top - boardRect.top + rect.height / 2 - 16 + (characterIndex < 3 ? -10 : 10)}px`;
         }
 
         function rollDice() {
             if (gameOver) {
-                alert("The game is over. All monsters have completed one round!");
+                alert("The game is over. All characters have completed one round!");
                 return;
             }
 
             const roll = Math.floor(Math.random() * 6) + 1;
-            const monster = monsters[currentMonster];
-            const previousPosition = monster.position;
-            monster.position = (monster.position + roll) % boardSpaces.length;
+            const character = characters[currentCharacter];
+            const previousPosition = character.position;
+            character.position = (character.position + roll) % boardSpaces.length;
             
-            updateMonsterPosition(currentMonster);
+            updateCharacterPosition(currentCharacter);
             
-            const spaceIndex = boardSpaces[monster.position];
+            const spaceIndex = boardSpaces[character.position];
             const spaceName = document.querySelectorAll('.board .space')[spaceIndex].textContent;
             
-            let message = `Monster ${currentMonster + 1} rolled a ${roll} and moved to ${spaceName}`;
+            let message = `${character.name} rolled a ${roll} and moved to ${spaceName}`;
             
-            // Check if the monster has passed or landed on GO
-            if (previousPosition > monster.position || monster.position === 0) {
-                monster.completed = true;
-                message += ". This monster has completed one round!";
+            // Check if the character has passed or landed on GO
+            if (previousPosition > character.position || character.position === 0) {
+                character.completed = true;
+                message += ". This character has completed one round!";
             }
 
             alert(message);
@@ -184,15 +400,16 @@
             
             if (!gameOver) {
                 do {
-                    currentMonster = (currentMonster + 1) % monsters.length;
-                } while (monsters[currentMonster].completed);
+                    currentCharacter = (currentCharacter + 1) % characters.length;
+                } while (characters[currentCharacter].completed);
             }
 
             updateGameStatus();
+            updateCurrentCharacterDisplay();
         }
 
         function checkGameStatus() {
-            if (monsters.every(monster => monster.completed)) {
+            if (characters.every(character => character.completed)) {
                 gameOver = true;
                 document.getElementById('rollButton').disabled = true;
             }
@@ -201,14 +418,28 @@
         function updateGameStatus() {
             const statusElement = document.getElementById('gameStatus');
             if (gameOver) {
-                statusElement.textContent = "Game Over! All monsters have completed one round.";
+                statusElement.textContent = "Game Over! All characters have completed one round.";
             } else {
-                const completedMonsters = monsters.filter(monster => monster.completed).length;
-                statusElement.textContent = `${completedMonsters} out of ${monsters.length} monsters have completed the round.`;
+                const completedCharacters = characters.filter(character => character.completed).length;
+                statusElement.textContent = `${completedCharacters} out of ${characters.length} characters have completed the round.`;
             }
         }
-        createMonsters();
+
+        function updateCurrentCharacterDisplay() {
+            const currentCharacterElement = document.getElementById('currentCharacter');
+            if (!gameOver) {
+                currentCharacterElement.innerHTML = `
+                    <div class="character-indicator">${characters[currentCharacter].svg}</div>
+                    Current Turn: ${characters[currentCharacter].name}
+                `;
+            } else {
+                currentCharacterElement.textContent = "Game Over!";
+            }
+        }
+
+        createCharacters();
         updateGameStatus();
+        updateCurrentCharacterDisplay();
     </script>
 </body>
 </html>
