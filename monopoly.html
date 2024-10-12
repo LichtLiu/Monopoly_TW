@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>6x6 Monopoly Board with Monsters - One Round</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .board {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            grid-template-rows: repeat(6, 1fr);
+            width: 600px;
+            height: 600px;
+            background-color: #C1E1C1;
+            border: 2px solid #000;
+            position: relative;
+        }
+        .space {
+            border: 1px solid #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-size: 12px;
+            padding: 5px;
+        }
+        .corner {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        .property { background-color: #FFA07A; }
+        .railroad { background-color: #C0C0C0; }
+        .utility { background-color: #98FB98; }
+        .tax { background-color: #FFB6C1; }
+        .card { background-color: #87CEFA; }
+        .monster {
+            width: 40px;
+            height: 40px;
+            position: absolute;
+            transition: all 0.5s ease;
+        }
+        #controls {
+            margin-top: 20px;
+        }
+        button {
+            font-size: 16px;
+            padding: 10px 20px;
+        }
+        #gameStatus {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="board">
+            <div class="space corner">GO</div>
+            <div class="space property">Mediterranean Avenue</div>
+            <div class="space card">Community Chest</div>
+            <div class="space property">Baltic Avenue</div>
+            <div class="space tax">Income Tax</div>
+            <div class="space railroad">Reading Railroad</div>
+            <div class="space railroad">B. & O. Railroad</div>
+            <div class="space" style="background-color: #FFF;"></div>
+            <div class="space" style="background-color: #FFF;"></div>
+            <div class="space" style="background-color: #FFF;"></div>
+            <div class="space" style="background-color: #FFF;"></div>
+            <div class="space property">St. Charles Place</div>
+            <div class="space property">Illinois Avenue</div>
+            <div class="space" style="background-color: #FFF;"></div>
+            <div class="space" style="background-color: #FFF;"></div>
+            <div class="space" style="background-color: #FFF;"></div>
+            <div class="space" style="background-color: #FFF;"></div>
+            <div class="space utility">Electric Company</div>
+            <div class="space property">Indiana Avenue</div>
+            <div class="space" style="background-color: #FFF;"></div>
+            <div class="space" style="background-color: #FFF;"></div>
+            <div class="space" style="background-color: #FFF;"></div>
+            <div class="space" style="background-color: #FFF;"></div>
+            <div class="space property">States Avenue</div>
+            <div class="space card">Chance</div>
+            <div class="space" style="background-color: #FFF;"></div>
+            <div class="space" style="background-color: #FFF;"></div>
+            <div class="space" style="background-color: #FFF;"></div>
+            <div class="space" style="background-color: #FFF;"></div>
+            <div class="space property">Virginia Avenue</div>
+            <div class="space corner">Free Parking</div>
+            <div class="space property">Kentucky Avenue</div>
+            <div class="space property">Tennessee Avenue</div>
+            <div class="space property">New York Avenue</div>
+            <div class="space railroad">Short Line</div>
+            <div class="space corner">GO TO JAIL</div>
+        </div>
+        <div id="controls">
+            <button onclick="rollDice()" id="rollButton">Roll Dice</button>
+        </div>
+        <div id="gameStatus"></div>
+    </div>
+
+    <script>
+        const boardSpaces = [
+            0, 1, 2, 3, 4, 5,
+            11, 17, 23, 29, 35,
+            34, 33, 32, 31, 30,
+            24, 18, 12, 6
+        ];
+
+        const monsters = [
+            { color: '#FF0000', position: 0, completed: false },
+            { color: '#00FF00', position: 0, completed: false },
+            { color: '#0000FF', position: 0, completed: false }
+        ];
+
+        let currentMonster = 0;
+        let gameOver = false;
+
+        function createMonsters() {
+            const boardElement = document.querySelector('.board');
+            monsters.forEach((monster, index) => {
+                const monsterElement = document.createElement('div');
+                monsterElement.className = 'monster';
+                monsterElement.id = `monster-${index}`;
+                monsterElement.style.backgroundColor = monster.color;
+                boardElement.appendChild(monsterElement);
+                updateMonsterPosition(index);
+            });
+        }
+
+        function updateMonsterPosition(monsterIndex) {
+            const monster = monsters[monsterIndex];
+            const monsterElement = document.getElementById(`monster-${monsterIndex}`);
+            const spaceIndex = boardSpaces[monster.position];
+            const spaceElement = document.querySelectorAll('.board .space')[spaceIndex];
+            const rect = spaceElement.getBoundingClientRect();
+            const boardRect = document.querySelector('.board').getBoundingClientRect();
+
+            monsterElement.style.left = `${rect.left - boardRect.left + rect.width / 2 - 20}px`;
+            monsterElement.style.top = `${rect.top - boardRect.top + rect.height / 2 - 20}px`;
+        }
+
+        function rollDice() {
+            if (gameOver) {
+                alert("The game is over. All monsters have completed one round!");
+                return;
+            }
+
+            const roll = Math.floor(Math.random() * 6) + 1;
+            const monster = monsters[currentMonster];
+            const previousPosition = monster.position;
+            monster.position = (monster.position + roll) % boardSpaces.length;
+            
+            updateMonsterPosition(currentMonster);
+            
+            const spaceIndex = boardSpaces[monster.position];
+            const spaceName = document.querySelectorAll('.board .space')[spaceIndex].textContent;
+            
+            let message = `Monster ${currentMonster + 1} rolled a ${roll} and moved to ${spaceName}`;
+            
+            // Check if the monster has passed or landed on GO
+            if (previousPosition > monster.position || monster.position === 0) {
+                monster.completed = true;
+                message += ". This monster has completed one round!";
+            }
+
+            alert(message);
+            
+            checkGameStatus();
+            
+            if (!gameOver) {
+                do {
+                    currentMonster = (currentMonster + 1) % monsters.length;
+                } while (monsters[currentMonster].completed);
+            }
+
+            updateGameStatus();
+        }
+
+        function checkGameStatus() {
+            if (monsters.every(monster => monster.completed)) {
+                gameOver = true;
+                document.getElementById('rollButton').disabled = true;
+            }
+        }
+
+        function updateGameStatus() {
+            const statusElement = document.getElementById('gameStatus');
+            if (gameOver) {
+                statusElement.textContent = "Game Over! All monsters have completed one round.";
+            } else {
+                const completedMonsters = monsters.filter(monster => monster.completed).length;
+                statusElement.textContent = `${completedMonsters} out of ${monsters.length} monsters have completed the round.`;
+            }
+        }
+        createMonsters();
+        updateGameStatus();
+    </script>
+</body>
+</html>
