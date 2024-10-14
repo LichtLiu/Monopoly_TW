@@ -159,6 +159,60 @@
 }
   
   
+  /* question card */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: white;
+    margin: 10% auto; /* Changed from 15% to 10% to move it up */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 400px;
+    height: 600px;
+    border-radius: 15px;
+    font-size: 30px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#questionTitle {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#questionText {
+    text-align: center;
+}
+
+.close {
+    color: #aaa;
+    position: absolute;
+    top: 10px;
+    right: 25px;
+    font-size: 35px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}  
+  
             </style>
 </head>
 <body>
@@ -286,6 +340,14 @@
             <span class="dice-dot"></span>
             <span class="dice-dot"></span>
         </div>
+    </div>
+</div>
+  
+  <div id="questionModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2 id="questionTitle">Question</h2>
+        <p id="questionText"></p>
     </div>
 </div>
   
@@ -513,6 +575,25 @@
     completed: false
 }
         ];
+  
+        const questions = [
+    "What is your favorite food?", // GO
+    "Name a country you'd like to visit.", // Mediterranean Avenue
+    "What's your favorite book?", // Community Chest
+    "If you could have any superpower, what would it be?", // Baltic Avenue
+    "What's your favorite movie?", // Income Tax
+    "What's your dream job?", // Reading Railroad
+    "If you could meet any historical figure, who would it be?", // Oriental Avenue
+    "What's your favorite hobby?", // Chance
+    "What's the best gift you've ever received?", // Vermont Avenue
+    "If you could learn any skill instantly, what would it be?", // Jail
+    
+];
+
+// Fill remaining spaces with a default question if needed
+while (questions.length < boardSpaces.length) {
+    questions.push("What's your favorite color?");
+}
 
         let currentCharacter = 0;
         let gameOver = false;
@@ -596,8 +677,18 @@
         message += ". This character has completed one round!";
     }
 
-    alert(message);
+    showQuestion(spaceIndex);
+}
+
+function showQuestion(spaceIndex) {
+    const modal = document.getElementById('questionModal');
+    const questionText = document.getElementById('questionText');
     
+    questionText.textContent = questions[spaceIndex];
+    modal.style.display = "block";
+}
+  
+function continueGame() {
     checkGameStatus();
     
     if (!gameOver) {
@@ -610,6 +701,27 @@
     updateCurrentCharacterDisplay();
 }
 
+
+// Close the modal when clicking on <span> (x)
+document.querySelector('.close').onclick = function() {
+    const modal = document.getElementById('questionModal');
+    modal.style.display = "none";
+    continueGame();
+}
+
+// Close the modal if the user clicks outside of it
+window.onclick = function(event) {
+    const modal = document.getElementById('questionModal');
+    if (event.target == modal) {
+        modal.style.display = "none";
+        continueGame();
+    }
+}
+  
+  
+  
+  
+  
         function checkGameStatus() {
             if (characters.every(character => character.completed)) {
                 gameOver = true;
