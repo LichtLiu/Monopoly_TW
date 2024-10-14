@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>6x6 Monopoly Board with Pixel Art Characters - One Round</title>
+    <title>10x8 Monopoly Board with Pixel Art Characters - One Round</title>
     <style>
         body {
             display: flex;
@@ -21,10 +21,10 @@
         }
         .board {
             display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            grid-template-rows: repeat(6, 1fr);
-            width: 600px;
-            height: 600px;
+            grid-template-columns: repeat(10, 1fr);
+            grid-template-rows: repeat(8, 1fr);
+            width: 1000px;
+            height: 800px;
             background-color: #C1E1C1;
             border: 2px solid #000;
             position: relative;
@@ -72,43 +72,83 @@
     <div class="game-container">
         <div id="currentCharacter"></div>
         <div class="board">
-            <!-- Board spaces remain the same as before -->
+            <!-- Updated board spaces for 10x8 grid -->
             <div class="space corner">GO</div>
             <div class="space property">Mediterranean Avenue</div>
             <div class="space card">Community Chest</div>
             <div class="space property">Baltic Avenue</div>
             <div class="space tax">Income Tax</div>
             <div class="space railroad">Reading Railroad</div>
-            <div class="space railroad">B. & O. Railroad</div>
+            <div class="space property">Oriental Avenue</div>
+            <div class="space card">Chance</div>
+            <div class="space property">Vermont Avenue</div>
+            <div class="space corner">Jail</div>
+            
+            <div class="space property">Connecticut Avenue</div>
+            <div class="space" style="background-color: #FFF;"></div>
+            <div class="space" style="background-color: #FFF;"></div>
+            <div class="space" style="background-color: #FFF;"></div>
+            <div class="space" style="background-color: #FFF;"></div>
             <div class="space" style="background-color: #FFF;"></div>
             <div class="space" style="background-color: #FFF;"></div>
             <div class="space" style="background-color: #FFF;"></div>
             <div class="space" style="background-color: #FFF;"></div>
             <div class="space property">St. Charles Place</div>
-            <div class="space property">Illinois Avenue</div>
-            <div class="space" style="background-color: #FFF;"></div>
-            <div class="space" style="background-color: #FFF;"></div>
-            <div class="space" style="background-color: #FFF;"></div>
-            <div class="space" style="background-color: #FFF;"></div>
+            
             <div class="space utility">Electric Company</div>
-            <div class="space property">Indiana Avenue</div>
+            <div class="space" style="background-color: #FFF;"></div>
+            <div class="space" style="background-color: #FFF;"></div>
+            <div class="space" style="background-color: #FFF;"></div>
+            <div class="space" style="background-color: #FFF;"></div>
             <div class="space" style="background-color: #FFF;"></div>
             <div class="space" style="background-color: #FFF;"></div>
             <div class="space" style="background-color: #FFF;"></div>
             <div class="space" style="background-color: #FFF;"></div>
             <div class="space property">States Avenue</div>
-            <div class="space card">Chance</div>
-            <div class="space" style="background-color: #FFF;"></div>
-            <div class="space" style="background-color: #FFF;"></div>
-            <div class="space" style="background-color: #FFF;"></div>
-            <div class="space" style="background-color: #FFF;"></div>
+            
             <div class="space property">Virginia Avenue</div>
+            <div class="space" style="background-color: #FFF;"></div>
+            <div class="space" style="background-color: #FFF;"></div>
+            <div class="space" style="background-color: #FFF;"></div>
+            <div class="space" style="background-color: #FFF;"></div>
+            <div class="space" style="background-color: #FFF;"></div>
+            <div class="space" style="background-color: #FFF;"></div>
+            <div class="space" style="background-color: #FFF;"></div>
+            <div class="space" style="background-color: #FFF;"></div>
+            <div class="space railroad">Pennsylvania Railroad</div>
+            
+            <div class="space property">St. James Place</div>
+            <div class="space" style="background-color: #FFF;"></div>
+            <div class="space" style="background-color: #FFF;"></div>
+            <div class="space" style="background-color: #FFF;"></div>
+            <div class="space" style="background-color: #FFF;"></div>
+            <div class="space" style="background-color: #FFF;"></div>
+            <div class="space" style="background-color: #FFF;"></div>
+            <div class="space" style="background-color: #FFF;"></div>
+            <div class="space" style="background-color: #FFF;"></div>
+            <div class="space property">Tennessee Avenue</div>
+            
+            <div class="space card">Community Chest</div>
+            <div class="space" style="background-color: #FFF;"></div>
+            <div class="space" style="background-color: #FFF;"></div>
+            <div class="space" style="background-color: #FFF;"></div>
+            <div class="space" style="background-color: #FFF;"></div>
+            <div class="space" style="background-color: #FFF;"></div>
+            <div class="space" style="background-color: #FFF;"></div>
+            <div class="space" style="background-color: #FFF;"></div>
+            <div class="space" style="background-color: #FFF;"></div>
+            <div class="space property">New York Avenue</div>
+            
             <div class="space corner">Free Parking</div>
             <div class="space property">Kentucky Avenue</div>
-            <div class="space property">Tennessee Avenue</div>
-            <div class="space property">New York Avenue</div>
-            <div class="space railroad">Short Line</div>
-            <div class="space corner">GO TO JAIL</div>
+            <div class="space card">Chance</div>
+            <div class="space property">Indiana Avenue</div>
+            <div class="space property">Illinois Avenue</div>
+            <div class="space railroad">B. & O. Railroad</div>
+            <div class="space property">Atlantic Avenue</div>
+            <div class="space utility">Water Works</div>
+            <div class="space property">Marvin Gardens</div>
+            <div class="space corner">Go To Jail</div>
         </div>
         <div id="controls">
             <button onclick="rollDice()" id="rollButton">Roll Dice</button>
@@ -118,10 +158,10 @@
 
     <script>
         const boardSpaces = [
-            0, 1, 2, 3, 4, 5,
-            11, 17, 23, 29, 35,
-            34, 33, 32, 31, 30,
-            24, 18, 12, 6
+            0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
+            19, 29, 39, 49, 59, 69, 79,
+            78, 77, 76, 75, 74, 73, 72, 71, 70,
+            60, 50, 40, 30, 20, 10
         ];
 
         const characters = [
@@ -366,16 +406,16 @@
 
             // Adjust position based on character index to avoid overlap
             const offset = 10 * (characterIndex % 3 - 1);
-            characterElement.style.left = `${rect.left - boardRect.left + rect.width / 2 - 16 + offset}px`;
-            characterElement.style.top = `${rect.top - boardRect.top + rect.height / 2 - 16 + (characterIndex < 3 ? -10 : 10)}px`;
+            characterElement.style.left = `${rect.left - boardRect.left + rect.width / 2 - 32 + offset}px`;
+            characterElement.style.top = `${rect.top - boardRect.top + rect.height / 2 - 32 + (characterIndex < 3 ? -10 : 10)}px`;
         }
-
         function rollDice() {
             if (gameOver) {
                 alert("The game is over. All characters have completed one round!");
                 return;
             }
 
+          
             const roll = Math.floor(Math.random() * 6) + 1;
             const character = characters[currentCharacter];
             const previousPosition = character.position;
