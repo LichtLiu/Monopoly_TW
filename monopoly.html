@@ -66,9 +66,103 @@
             margin-right: 10px;
             vertical-align: middle;
         }
-    </style>
+       
+  
+  
+        #diceContainer {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 200px;
+    height: 200px;
+    perspective: 600px;
+    z-index: 1000;
+    display: none;
+}
+
+.dice {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 1s;
+}
+
+.dice-face {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    border: 2px solid #000;
+    background: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.dice-face.one { transform: rotateY(0deg) translateZ(100px); }
+.dice-face.two { transform: rotateY(90deg) translateZ(100px); }
+.dice-face.three { transform: rotateX(-90deg) translateZ(100px); }
+.dice-face.four { transform: rotateX(90deg) translateZ(100px); }
+.dice-face.five { transform: rotateY(-90deg) translateZ(100px); }
+.dice-face.six { transform: rotateY(180deg) translateZ(100px); }
+
+.dice-dot {
+    display: block;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: black;
+    position: absolute;
+}
+
+/* One */
+.one .dice-dot { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+
+/* Two */
+.two .dice-dot:nth-child(1) { top: 25%; left: 25%; }
+.two .dice-dot:nth-child(2) { bottom: 25%; right: 25%; }
+
+/* Three */
+.three .dice-dot:nth-child(1) { top: 25%; left: 25%; }
+.three .dice-dot:nth-child(2) { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+.three .dice-dot:nth-child(3) { bottom: 25%; right: 25%; }
+
+/* Four */
+.four .dice-dot:nth-child(1) { top: 20%; left: 20%; }
+.four .dice-dot:nth-child(2) { top: 20%; right: 20%; }
+.four .dice-dot:nth-child(3) { bottom: 20%; left: 20%; }
+.four .dice-dot:nth-child(4) { bottom: 20%; right: 20%; }
+
+/* Five */
+.five .dice-dot:nth-child(1) { top: 20%; left: 20%; }
+.five .dice-dot:nth-child(2) { top: 20%; right: 20%; }
+.five .dice-dot:nth-child(3) { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+.five .dice-dot:nth-child(4) { bottom: 20%; left: 20%; }
+.five .dice-dot:nth-child(5) { bottom: 20%; right: 20%; }
+
+/* Six */
+.six .dice-dot:nth-child(1) { top: 20%; left: 20%; }
+.six .dice-dot:nth-child(2) { top: 20%; right: 20%; }
+.six .dice-dot:nth-child(3) { top: 50%; left: 20%; transform: translateY(-50%); }
+.six .dice-dot:nth-child(4) { top: 50%; right: 20%; transform: translateY(-50%); }
+.six .dice-dot:nth-child(5) { bottom: 20%; left: 20%; }
+.six .dice-dot:nth-child(6) { bottom: 20%; right: 20%; }
+
+.dice-rolling {
+    animation: rolling 0.5s linear infinite;
+}
+
+@keyframes rolling {
+    0% { transform: rotateX(0deg) rotateY(0deg); }
+    100% { transform: rotateX(360deg) rotateY(360deg); }
+}
+  
+  
+            </style>
 </head>
 <body>
+  <div class="game-container">
     <div class="game-container">
         <div id="currentCharacter"></div>
         <div class="board">
@@ -155,7 +249,46 @@
         </div>
         <div id="gameStatus"></div>
     </div>
-
+  </div>
+  
+  <div id="diceContainer">
+    <div class="dice">
+        <div class="dice-face one">
+            <span class="dice-dot"></span>
+        </div>
+        <div class="dice-face two">
+            <span class="dice-dot"></span>
+            <span class="dice-dot"></span>
+        </div>
+        <div class="dice-face three">
+            <span class="dice-dot"></span>
+            <span class="dice-dot"></span>
+            <span class="dice-dot"></span>
+        </div>
+        <div class="dice-face four">
+            <span class="dice-dot"></span>
+            <span class="dice-dot"></span>
+            <span class="dice-dot"></span>
+            <span class="dice-dot"></span>
+        </div>
+        <div class="dice-face five">
+            <span class="dice-dot"></span>
+            <span class="dice-dot"></span>
+            <span class="dice-dot"></span>
+            <span class="dice-dot"></span>
+            <span class="dice-dot"></span>
+        </div>
+        <div class="dice-face six">
+            <span class="dice-dot"></span>
+            <span class="dice-dot"></span>
+            <span class="dice-dot"></span>
+            <span class="dice-dot"></span>
+            <span class="dice-dot"></span>
+            <span class="dice-dot"></span>
+        </div>
+    </div>
+</div>
+  
     <script>
         const boardSpaces = [
             0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
@@ -409,44 +542,73 @@
             characterElement.style.left = `${rect.left - boardRect.left + rect.width / 2 - 32 + offset}px`;
             characterElement.style.top = `${rect.top - boardRect.top + rect.height / 2 - 32 + (characterIndex < 3 ? -10 : 10)}px`;
         }
+        
+  
+  
         function rollDice() {
-            if (gameOver) {
-                alert("The game is over. All characters have completed one round!");
-                return;
-            }
-
+      if (gameOver) {
+          alert("The game is over. All characters have completed one round!");
+          return;
+      }
+  
+      const diceContainer = document.getElementById('diceContainer');
+      const dice = diceContainer.querySelector('.dice');
+      diceContainer.style.display = 'block';
+      dice.classList.add('dice-rolling');
+      
+      setTimeout(() => {
+          dice.classList.remove('dice-rolling');
+          const roll = Math.floor(Math.random() * 6) + 1;
           
-            const roll = Math.floor(Math.random() * 6) + 1;
-            const character = characters[currentCharacter];
-            const previousPosition = character.position;
-            character.position = (character.position + roll) % boardSpaces.length;
-            
-            updateCharacterPosition(currentCharacter);
-            
-            const spaceIndex = boardSpaces[character.position];
-            const spaceName = document.querySelectorAll('.board .space')[spaceIndex].textContent;
-            
-            let message = `${character.name} rolled a ${roll} and moved to ${spaceName}`;
-            
-            // Check if the character has passed or landed on GO
-            if (previousPosition > character.position || character.position === 0) {
-                character.completed = true;
-                message += ". This character has completed one round!";
-            }
+          // Set the final rotation of the dice
+          switch(roll) {
+              case 1: dice.style.transform = 'rotateX(0deg) rotateY(0deg)'; break;
+              case 2: dice.style.transform = 'rotateY(-90deg)'; break;
+              case 3: dice.style.transform = 'rotateX(90deg)'; break;
+              case 4: dice.style.transform = 'rotateX(-90deg)'; break;
+              case 5: dice.style.transform = 'rotateY(90deg)'; break;
+              case 6: dice.style.transform = 'rotateX(180deg)'; break;
+          }
+          
+          setTimeout(() => {
+              diceContainer.style.display = 'none';
+              moveCharacter(roll);
+          }, 1500);
+      }, 1000);
+  }
+  
+  
+  function moveCharacter(roll) {
+    const character = characters[currentCharacter];
+    const previousPosition = character.position;
+    character.position = (character.position + roll) % boardSpaces.length;
+    
+    updateCharacterPosition(currentCharacter);
+    
+    const spaceIndex = boardSpaces[character.position];
+    const spaceName = document.querySelectorAll('.board .space')[spaceIndex].textContent;
+    
+    let message = `${character.name} rolled a ${roll} and moved to ${spaceName}`;
+    
+    // Check if the character has passed or landed on GO
+    if (previousPosition > character.position || character.position === 0) {
+        character.completed = true;
+        message += ". This character has completed one round!";
+    }
 
-            alert(message);
-            
-            checkGameStatus();
-            
-            if (!gameOver) {
-                do {
-                    currentCharacter = (currentCharacter + 1) % characters.length;
-                } while (characters[currentCharacter].completed);
-            }
+    alert(message);
+    
+    checkGameStatus();
+    
+    if (!gameOver) {
+        do {
+            currentCharacter = (currentCharacter + 1) % characters.length;
+        } while (characters[currentCharacter].completed);
+    }
 
-            updateGameStatus();
-            updateCurrentCharacterDisplay();
-        }
+    updateGameStatus();
+    updateCurrentCharacterDisplay();
+}
 
         function checkGameStatus() {
             if (characters.every(character => character.completed)) {
