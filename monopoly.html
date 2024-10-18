@@ -619,7 +619,6 @@ while (questions.length < boardSpaces.length) {
     } else {
         
     }
-    
 };
 
         let currentCharacter = 0;
@@ -804,6 +803,10 @@ function loadGameState() {
                 currentCharacterElement.textContent = "Game Over!";
             }
         }
+
+        createCharacters();
+        updateGameStatus();
+        updateCurrentCharacterDisplay();
     </script>
 </body>
 </html>
