@@ -15,6 +15,7 @@
             font-family: Arial, sans-serif;
         }
         .game-container {
+            position: relative;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -24,7 +25,7 @@
             grid-template-columns: repeat(10, 1fr);
             grid-template-rows: repeat(8, 1fr);
             width: 1000px;
-            height: 800px;
+            height: 600px;
             background-color: #C1E1C1;
             border: 2px solid #000;
             position: relative;
@@ -213,9 +214,20 @@
     cursor: pointer;
 }  
   
+  #resetButton {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 14px;
+    padding: 5px 10px;
+    cursor: pointer;
+    z-index: 100;
+}
+  
             </style>
 </head>
 <body>
+  <button id="resetButton" onclick="resetGame()">Reset Game</button>
   <div class="game-container">
     <div class="game-container">
         <div id="currentCharacter"></div>
@@ -359,7 +371,7 @@
             60, 50, 40, 30, 20, 10
         ];
 
-        const characters = [
+        let characters = [
                 {
             name: 'Fighter',
             svg: `
@@ -594,10 +606,32 @@
 while (questions.length < boardSpaces.length) {
     questions.push("What's your favorite color?");
 }
+  
+  
+  window.onload = function() {
+    if (loadGameState()) {
+        // If a saved state was loaded, update the board
+        characters.forEach((character, index) => {
+            updateCharacterPosition(index);
+        });
+        updateGameStatus();
+        updateCurrentCharacterDisplay();
+    } else {
+        // If no saved state, initialize the game as before
+        createCharacters();
+        updateGameStatus();
+        updateCurrentCharacterDisplay();
+    }
+};
 
         let currentCharacter = 0;
         let gameOver = false;
 
+        function resetGame() {
+    localStorage.removeItem('monopolyGameState');
+    location.reload();
+}
+  
         function createCharacters() {
             const boardElement = document.querySelector('.board');
             characters.forEach((character, index) => {
@@ -678,6 +712,7 @@ while (questions.length < boardSpaces.length) {
     }
 
     showQuestion(spaceIndex);
+    saveGameState();
 }
 
 function showQuestion(spaceIndex) {
@@ -699,6 +734,7 @@ function continueGame() {
 
     updateGameStatus();
     updateCurrentCharacterDisplay();
+    saveGameState();
 }
 
 
@@ -717,7 +753,27 @@ window.onclick = function(event) {
         continueGame();
     }
 }
-  
+      
+       function saveGameState() {
+    const gameState = {
+        characters: characters,
+        currentCharacter: currentCharacter,
+        gameOver: gameOver
+    };
+    localStorage.setItem('monopolyGameState', JSON.stringify(gameState));
+}
+
+function loadGameState() {
+    const savedState = localStorage.getItem('monopolyGameState');
+    if (savedState) {
+        const gameState = JSON.parse(savedState);
+        characters = gameState.characters;
+        currentCharacter = gameState.currentCharacter;
+        gameOver = gameState.gameOver;
+        return true;
+    }
+    return false;
+}
   
   
   
