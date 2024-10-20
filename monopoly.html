@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,22 +15,25 @@
             background-color: #f0f0f0;
             font-family: Arial, sans-serif;
         }
+
         .game-container {
             position: relative;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
+
         .board {
             display: grid;
             grid-template-columns: repeat(10, 1fr);
             grid-template-rows: repeat(8, 1fr);
             width: 1000px;
-            height: 600px;
+            height: 550px;
             background-color: #C1E1C1;
             border: 2px solid #000;
             position: relative;
         }
+
         .space {
             border: 1px solid #000;
             display: flex;
@@ -37,29 +41,62 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            font-size: 12px;
+            font-size: 16px;
             padding: 5px;
         }
-        .corner { background-color: #f9f9f9; font-weight: bold; }
-        .property { background-color: #FFA07A; }
-        .railroad { background-color: #C0C0C0; }
-        .utility { background-color: #98FB98; }
-        .tax { background-color: #FFB6C1; }
-        .card { background-color: #87CEFA; }
+
+        .corner {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+
+        .property {
+            background-color: #FFA07A;
+        }
+
+        .railroad {
+            background-color: #C0C0C0;
+        }
+
+        .utility {
+            background-color: #98FB98;
+        }
+
+        .tax {
+            background-color: #FFB6C1;
+        }
+
+        .card {
+            background-color: #87CEFA;
+        }
+
         .character {
             width: 64px;
             height: 64px;
             position: absolute;
             transition: all 0.5s ease;
         }
-        #controls { margin-top: 20px; }
-        button { font-size: 16px; padding: 10px 20px; }
-        #gameStatus { margin-top: 10px; font-weight: bold; }
+
+        #controls {
+            margin-top: 20px;
+        }
+
+        button {
+            font-size: 16px;
+            padding: 10px 20px;
+        }
+
+        #gameStatus {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
         #currentCharacter {
             margin-bottom: 10px;
             font-size: 18px;
             font-weight: bold;
         }
+
         .character-indicator {
             display: inline-block;
             width: 32px;
@@ -67,302 +104,409 @@
             margin-right: 10px;
             vertical-align: middle;
         }
-       
-  
-  
+
+
+
         #diceContainer {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 200px;
-    height: 200px;
-    perspective: 600px;
-    z-index: 1000;
-    display: none;
-}
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 200px;
+            perspective: 600px;
+            z-index: 1000;
+            display: none;
+        }
 
-.dice {
-    width: 100%;
-    height: 100%;
-    position: relative;
-    transform-style: preserve-3d;
-    transition: transform 1s;
-}
+        .dice {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 1s;
+        }
 
-.dice-face {
-    position: absolute;
-    width: 200px;
-    height: 200px;
-    border: 2px solid #000;
-    background: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+        .dice-face {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border: 2px solid #000;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-.dice-face.one { transform: rotateY(0deg) translateZ(100px); }
-.dice-face.two { transform: rotateY(90deg) translateZ(100px); }
-.dice-face.three { transform: rotateX(-90deg) translateZ(100px); }
-.dice-face.four { transform: rotateX(90deg) translateZ(100px); }
-.dice-face.five { transform: rotateY(-90deg) translateZ(100px); }
-.dice-face.six { transform: rotateY(180deg) translateZ(100px); }
+        .dice-face.one {
+            transform: rotateY(0deg) translateZ(100px);
+        }
 
-.dice-dot {
-    display: block;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    background-color: black;
-    position: absolute;
-}
+        .dice-face.two {
+            transform: rotateY(90deg) translateZ(100px);
+        }
 
-/* One */
-.one .dice-dot { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+        .dice-face.three {
+            transform: rotateX(-90deg) translateZ(100px);
+        }
 
-/* Two */
-.two .dice-dot:nth-child(1) { top: 25%; left: 25%; }
-.two .dice-dot:nth-child(2) { bottom: 25%; right: 25%; }
+        .dice-face.four {
+            transform: rotateX(90deg) translateZ(100px);
+        }
 
-/* Three */
-.three .dice-dot:nth-child(1) { top: 25%; left: 25%; }
-.three .dice-dot:nth-child(2) { top: 50%; left: 50%; transform: translate(-50%, -50%); }
-.three .dice-dot:nth-child(3) { bottom: 25%; right: 25%; }
+        .dice-face.five {
+            transform: rotateY(-90deg) translateZ(100px);
+        }
 
-/* Four */
-.four .dice-dot:nth-child(1) { top: 20%; left: 20%; }
-.four .dice-dot:nth-child(2) { top: 20%; right: 20%; }
-.four .dice-dot:nth-child(3) { bottom: 20%; left: 20%; }
-.four .dice-dot:nth-child(4) { bottom: 20%; right: 20%; }
+        .dice-face.six {
+            transform: rotateY(180deg) translateZ(100px);
+        }
 
-/* Five */
-.five .dice-dot:nth-child(1) { top: 20%; left: 20%; }
-.five .dice-dot:nth-child(2) { top: 20%; right: 20%; }
-.five .dice-dot:nth-child(3) { top: 50%; left: 50%; transform: translate(-50%, -50%); }
-.five .dice-dot:nth-child(4) { bottom: 20%; left: 20%; }
-.five .dice-dot:nth-child(5) { bottom: 20%; right: 20%; }
+        .dice-dot {
+            display: block;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: black;
+            position: absolute;
+        }
 
-/* Six */
-.six .dice-dot:nth-child(1) { top: 20%; left: 20%; }
-.six .dice-dot:nth-child(2) { top: 20%; right: 20%; }
-.six .dice-dot:nth-child(3) { top: 50%; left: 20%; transform: translateY(-50%); }
-.six .dice-dot:nth-child(4) { top: 50%; right: 20%; transform: translateY(-50%); }
-.six .dice-dot:nth-child(5) { bottom: 20%; left: 20%; }
-.six .dice-dot:nth-child(6) { bottom: 20%; right: 20%; }
+        /* One */
+        .one .dice-dot {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
 
-.dice-rolling {
-    animation: rolling 0.5s linear infinite;
-}
+        /* Two */
+        .two .dice-dot:nth-child(1) {
+            top: 25%;
+            left: 25%;
+        }
 
-@keyframes rolling {
-    0% { transform: rotateX(0deg) rotateY(0deg); }
-    100% { transform: rotateX(360deg) rotateY(360deg); }
-}
-  
-  
-  /* question card */
-  .modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.4);
-}
+        .two .dice-dot:nth-child(2) {
+            bottom: 25%;
+            right: 25%;
+        }
 
-.modal-content {
-    background-color: white;
-    margin: 10% auto; /* Changed from 15% to 10% to move it up */
-    padding: 20px;
-    border: 1px solid #888;
-    width: 400px;
-    height: 600px;
-    border-radius: 15px;
-    font-size: 30px;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
+        /* Three */
+        .three .dice-dot:nth-child(1) {
+            top: 25%;
+            left: 25%;
+        }
 
-#questionTitle {
-    text-align: center;
-    margin-bottom: 20px;
-}
+        .three .dice-dot:nth-child(2) {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
 
-#questionText {
-    text-align: center;
-}
+        .three .dice-dot:nth-child(3) {
+            bottom: 25%;
+            right: 25%;
+        }
 
-.close {
-    color: #aaa;
-    position: absolute;
-    top: 10px;
-    right: 25px;
-    font-size: 35px;
-    font-weight: bold;
-    cursor: pointer;
-}
+        /* Four */
+        .four .dice-dot:nth-child(1) {
+            top: 20%;
+            left: 20%;
+        }
 
-.close:hover,
-.close:focus {
-    color: #000;
-    text-decoration: none;
-    cursor: pointer;
-}  
-  
-  #resetButton {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 14px;
-    padding: 5px 10px;
-    cursor: pointer;
-    z-index: 100;
-}
-  
-            </style>
+        .four .dice-dot:nth-child(2) {
+            top: 20%;
+            right: 20%;
+        }
+
+        .four .dice-dot:nth-child(3) {
+            bottom: 20%;
+            left: 20%;
+        }
+
+        .four .dice-dot:nth-child(4) {
+            bottom: 20%;
+            right: 20%;
+        }
+
+        /* Five */
+        .five .dice-dot:nth-child(1) {
+            top: 20%;
+            left: 20%;
+        }
+
+        .five .dice-dot:nth-child(2) {
+            top: 20%;
+            right: 20%;
+        }
+
+        .five .dice-dot:nth-child(3) {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .five .dice-dot:nth-child(4) {
+            bottom: 20%;
+            left: 20%;
+        }
+
+        .five .dice-dot:nth-child(5) {
+            bottom: 20%;
+            right: 20%;
+        }
+
+        /* Six */
+        .six .dice-dot:nth-child(1) {
+            top: 20%;
+            left: 20%;
+        }
+
+        .six .dice-dot:nth-child(2) {
+            top: 20%;
+            right: 20%;
+        }
+
+        .six .dice-dot:nth-child(3) {
+            top: 50%;
+            left: 20%;
+            transform: translateY(-50%);
+        }
+
+        .six .dice-dot:nth-child(4) {
+            top: 50%;
+            right: 20%;
+            transform: translateY(-50%);
+        }
+
+        .six .dice-dot:nth-child(5) {
+            bottom: 20%;
+            left: 20%;
+        }
+
+        .six .dice-dot:nth-child(6) {
+            bottom: 20%;
+            right: 20%;
+        }
+
+        .dice-rolling {
+            animation: rolling 0.5s linear infinite;
+        }
+
+        @keyframes rolling {
+            0% {
+                transform: rotateX(0deg) rotateY(0deg);
+            }
+
+            100% {
+                transform: rotateX(360deg) rotateY(360deg);
+            }
+        }
+
+
+        /* question card */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            /* Changed from 15% to 10% to move it up */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 400px;
+            height: 600px;
+            border-radius: 15px;
+            font-size: 30px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #questionTitle {
+            white-space: pre-line;
+            text-align: justify;
+            margin-bottom: 20px;
+        }
+
+        #questionText {
+            text-align: center;
+        }
+
+        .close {
+            color: #aaa;
+            position: absolute;
+            top: 10px;
+            right: 25px;
+            font-size: 35px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        #resetButton {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 14px;
+            padding: 5px 10px;
+            cursor: pointer;
+            z-index: 100;
+        }
+    </style>
 </head>
+
 <body>
-  <button id="resetButton" onclick="resetGame()">Reset Game</button>
-  <div class="game-container">
+    <button id="resetButton" onclick="resetGame()">Reset Game</button>
     <div class="game-container">
-        <div id="currentCharacter"></div>
-        <div class="board">
-            <!-- Updated board spaces for 10x8 grid -->
-            <div class="space corner">GO</div>
-            <div class="space property">Mediterranean Avenue</div>
-            <div class="space card">Community Chest</div>
-            <div class="space property">Baltic Avenue</div>
-            <div class="space tax">Income Tax</div>
-            <div class="space railroad">Reading Railroad</div>
-            <div class="space property">Oriental Avenue</div>
-            <div class="space card">Chance</div>
-            <div class="space property">Vermont Avenue</div>
-            <div class="space corner">Jail</div>
-            
-            <div class="space property">Connecticut Avenue</div>
-            <div class="space" style="background-color: #FFF;"></div>
-            <div class="space" style="background-color: #FFF;"></div>
-            <div class="space" style="background-color: #FFF;"></div>
-            <div class="space" style="background-color: #FFF;"></div>
-            <div class="space" style="background-color: #FFF;"></div>
-            <div class="space" style="background-color: #FFF;"></div>
-            <div class="space" style="background-color: #FFF;"></div>
-            <div class="space" style="background-color: #FFF;"></div>
-            <div class="space property">St. Charles Place</div>
-            
-            <div class="space utility">Electric Company</div>
-            <div class="space" style="background-color: #FFF;"></div>
-            <div class="space" style="background-color: #FFF;"></div>
-            <div class="space" style="background-color: #FFF;"></div>
-            <div class="space" style="background-color: #FFF;"></div>
-            <div class="space" style="background-color: #FFF;"></div>
-            <div class="space" style="background-color: #FFF;"></div>
-            <div class="space" style="background-color: #FFF;"></div>
-            <div class="space" style="background-color: #FFF;"></div>
-            <div class="space property">States Avenue</div>
-            
-            <div class="space property">Virginia Avenue</div>
-            <div class="space" style="background-color: #FFF;"></div>
-            <div class="space" style="background-color: #FFF;"></div>
-            <div class="space" style="background-color: #FFF;"></div>
-            <div class="space" style="background-color: #FFF;"></div>
-            <div class="space" style="background-color: #FFF;"></div>
-            <div class="space" style="background-color: #FFF;"></div>
-            <div class="space" style="background-color: #FFF;"></div>
-            <div class="space" style="background-color: #FFF;"></div>
-            <div class="space railroad">Pennsylvania Railroad</div>
-            
-            <div class="space property">St. James Place</div>
-            <div class="space" style="background-color: #FFF;"></div>
-            <div class="space" style="background-color: #FFF;"></div>
-            <div class="space" style="background-color: #FFF;"></div>
-            <div class="space" style="background-color: #FFF;"></div>
-            <div class="space" style="background-color: #FFF;"></div>
-            <div class="space" style="background-color: #FFF;"></div>
-            <div class="space" style="background-color: #FFF;"></div>
-            <div class="space" style="background-color: #FFF;"></div>
-            <div class="space property">Tennessee Avenue</div>
-            
-            <div class="space card">Community Chest</div>
-            <div class="space" style="background-color: #FFF;"></div>
-            <div class="space" style="background-color: #FFF;"></div>
-            <div class="space" style="background-color: #FFF;"></div>
-            <div class="space" style="background-color: #FFF;"></div>
-            <div class="space" style="background-color: #FFF;"></div>
-            <div class="space" style="background-color: #FFF;"></div>
-            <div class="space" style="background-color: #FFF;"></div>
-            <div class="space" style="background-color: #FFF;"></div>
-            <div class="space property">New York Avenue</div>
-            
-            <div class="space corner">Free Parking</div>
-            <div class="space property">Kentucky Avenue</div>
-            <div class="space card">Chance</div>
-            <div class="space property">Indiana Avenue</div>
-            <div class="space property">Illinois Avenue</div>
-            <div class="space railroad">B. & O. Railroad</div>
-            <div class="space property">Atlantic Avenue</div>
-            <div class="space utility">Water Works</div>
-            <div class="space property">Marvin Gardens</div>
-            <div class="space corner">Go To Jail</div>
-        </div>
-        <div id="controls">
-            <button onclick="rollDice()" id="rollButton">Roll Dice</button>
-        </div>
-        <div id="gameStatus"></div>
-    </div>
-  </div>
-  
-  <div id="diceContainer">
-    <div class="dice">
-        <div class="dice-face one">
-            <span class="dice-dot"></span>
-        </div>
-        <div class="dice-face two">
-            <span class="dice-dot"></span>
-            <span class="dice-dot"></span>
-        </div>
-        <div class="dice-face three">
-            <span class="dice-dot"></span>
-            <span class="dice-dot"></span>
-            <span class="dice-dot"></span>
-        </div>
-        <div class="dice-face four">
-            <span class="dice-dot"></span>
-            <span class="dice-dot"></span>
-            <span class="dice-dot"></span>
-            <span class="dice-dot"></span>
-        </div>
-        <div class="dice-face five">
-            <span class="dice-dot"></span>
-            <span class="dice-dot"></span>
-            <span class="dice-dot"></span>
-            <span class="dice-dot"></span>
-            <span class="dice-dot"></span>
-        </div>
-        <div class="dice-face six">
-            <span class="dice-dot"></span>
-            <span class="dice-dot"></span>
-            <span class="dice-dot"></span>
-            <span class="dice-dot"></span>
-            <span class="dice-dot"></span>
-            <span class="dice-dot"></span>
+        <div class="game-container">
+            <div id="currentCharacter"></div>
+            <div class="board">
+                <!-- Updated board spaces for 10x8 grid -->
+                <div class="space corner">GO</div>
+                <div class="space property">Pingtung <br>(屏東)</div>
+                <div class="space card">Kaohsiung <br>(高雄)</div>
+                <div class="space property">Tainan <br>(台南)</div>
+                <div class="space tax">Chiayi <br>(嘉義)</div>
+                <div class="space railroad">Yunlin <br>(雲林)</div>
+                <div class="space property">Nantou <br>(南投)</div>
+                <div class="space card">Chance</div>
+                <div class="space property">Changhua <br>(彰化)</div>
+                <div class="space corner">Jail</div>
+
+                <div class="space property">Matsu <br>(馬祖)</div>
+                <div class="space" style="background-color: #FFF;"></div>
+                <div class="space" style="background-color: #FFF;"></div>
+                <div class="space" style="background-color: #FFF;"></div>
+                <div class="space" style="background-color: #FFF;"></div>
+                <div class="space" style="background-color: #FFF;"></div>
+                <div class="space" style="background-color: #FFF;"></div>
+                <div class="space" style="background-color: #FFF;"></div>
+                <div class="space" style="background-color: #FFF;"></div>
+                <div class="space property">Taichung <br>(台中)</div>
+
+                <div class="space utility">Kinmen <br>(金門)</div>
+                <div class="space" style="background-color: #FFF;"></div>
+                <div class="space" style="background-color: #FFF;"></div>
+                <div class="space" style="background-color: #FFF;"></div>
+                <div class="space" style="background-color: #FFF;"></div>
+                <div class="space" style="background-color: #FFF;"></div>
+                <div class="space" style="background-color: #FFF;"></div>
+                <div class="space" style="background-color: #FFF;"></div>
+                <div class="space" style="background-color: #FFF;"></div>
+                <div class="space property">Chance</div>
+
+                <div class="space property">Orchid Island <br>(蘭嶼)</div>
+                <div class="space" style="background-color: #FFF;"></div>
+                <div class="space" style="background-color: #FFF;"></div>
+                <div class="space" style="background-color: #FFF;"></div>
+                <div class="space" style="background-color: #FFF;"></div>
+                <div class="space" style="background-color: #FFF;"></div>
+                <div class="space" style="background-color: #FFF;"></div>
+                <div class="space" style="background-color: #FFF;"></div>
+                <div class="space" style="background-color: #FFF;"></div>
+                <div class="space railroad">Miaoli <br>(苗栗)</div>
+
+                <div class="space property">Chance</div>
+                <div class="space" style="background-color: #FFF;"></div>
+                <div class="space" style="background-color: #FFF;"></div>
+                <div class="space" style="background-color: #FFF;"></div>
+                <div class="space" style="background-color: #FFF;"></div>
+                <div class="space" style="background-color: #FFF;"></div>
+                <div class="space" style="background-color: #FFF;"></div>
+                <div class="space" style="background-color: #FFF;"></div>
+                <div class="space" style="background-color: #FFF;"></div>
+                <div class="space property">Hsinchu <br>(新竹)</div>
+
+                <div class="space card">Green Island <br>(綠島)</div>
+                <div class="space" style="background-color: #FFF;"></div>
+                <div class="space" style="background-color: #FFF;"></div>
+                <div class="space" style="background-color: #FFF;"></div>
+                <div class="space" style="background-color: #FFF;"></div>
+                <div class="space" style="background-color: #FFF;"></div>
+                <div class="space" style="background-color: #FFF;"></div>
+                <div class="space" style="background-color: #FFF;"></div>
+                <div class="space" style="background-color: #FFF;"></div>
+                <div class="space property">Taoyuan <br>(桃園)</div>
+
+                <div class="space corner">Free Parking</div>
+                <div class="space property">Penghu <br>(澎湖)</div>
+                <div class="space card">Chance</div>
+                <div class="space property">Taitung <br>(台東)</div>
+                <div class="space property">Hualien <br>(花蓮)</div>
+                <div class="space railroad">Yilan <br>(宜蘭)</div>
+                <div class="space property">Keelung <br>(基隆)</div>
+                <div class="space utility">Chance</div>
+                <div class="space property">New Taipei <br>(新北)</div>
+                <div class="space corner">Go To Jail</div>
+            </div>
+            <div id="controls">
+                <button onclick="rollDice()" id="rollButton">Roll Dice</button>
+            </div>
+            <div id="gameStatus"></div>
         </div>
     </div>
-</div>
-  
-  <div id="questionModal" class="modal">
-    <div class="modal-content">
-        <span class="close">&times;</span>
-        <h2 id="questionTitle">Question</h2>
-        <p id="questionText"></p>
+
+    <div id="diceContainer">
+        <div class="dice">
+            <div class="dice-face one">
+                <span class="dice-dot"></span>
+            </div>
+            <div class="dice-face two">
+                <span class="dice-dot"></span>
+                <span class="dice-dot"></span>
+            </div>
+            <div class="dice-face three">
+                <span class="dice-dot"></span>
+                <span class="dice-dot"></span>
+                <span class="dice-dot"></span>
+            </div>
+            <div class="dice-face four">
+                <span class="dice-dot"></span>
+                <span class="dice-dot"></span>
+                <span class="dice-dot"></span>
+                <span class="dice-dot"></span>
+            </div>
+            <div class="dice-face five">
+                <span class="dice-dot"></span>
+                <span class="dice-dot"></span>
+                <span class="dice-dot"></span>
+                <span class="dice-dot"></span>
+                <span class="dice-dot"></span>
+            </div>
+            <div class="dice-face six">
+                <span class="dice-dot"></span>
+                <span class="dice-dot"></span>
+                <span class="dice-dot"></span>
+                <span class="dice-dot"></span>
+                <span class="dice-dot"></span>
+                <span class="dice-dot"></span>
+            </div>
+        </div>
     </div>
-</div>
-  
+
+    <div id="questionModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="questionTitle">Question</h2>
+            <p id="questionText"></p>
+        </div>
+    </div>
+
     <script>
         const boardSpaces = [
             0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
@@ -372,263 +516,353 @@
         ];
 
         let characters = [
-                {
-            name: 'Fighter',
-            svg: `
-                <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-                    <!-- Helmet with horns -->
-                    <rect x="10" y="4" width="12" height="6" fill="#808080"/>
-                    <rect x="8" y="6" width="2" height="4" fill="#808080"/>
-                    <rect x="22" y="6" width="2" height="4" fill="#808080"/>
-                    <rect x="6" y="8" width="2" height="2" fill="#C0C0C0"/>
-                    <rect x="24" y="8" width="2" height="2" fill="#C0C0C0"/>
-                    
-                    <!-- Face -->
-                    <rect x="12" y="10" width="8" height="4" fill="#FDB863"/>
-                    <rect x="14" y="12" width="2" height="2" fill="#000000"/>
-                    <rect x="18" y="12" width="2" height="2" fill="#000000"/>
-                    
-                    <!-- Dark armor body -->
-                    <rect x="10" y="14" width="12" height="10" fill="#505050"/>
-                    <rect x="12" y="16" width="8" height="6" fill="#606060"/>
-                    
-                    <!-- Arms -->
-                    <rect x="8" y="14" width="2" height="8" fill="#505050"/>
-                    <rect x="22" y="14" width="2" height="8" fill="#505050"/>
-                    
-                    <!-- Legs -->
-                    <rect x="10" y="24" width="4" height="6" fill="#505050"/>
-                    <rect x="18" y="24" width="4" height="6" fill="#505050"/>
-                    
-                    <!-- Large sword -->
-                    <rect x="24" y="12" width="2" height="14" fill="#C0C0C0"/>
-                    <rect x="23" y="26" width="4" height="2" fill="#C0C0C0"/>
-                    <rect x="26" y="14" width="2" height="10" fill="#A0A0A0"/>
-                </svg>
-            `,
-            position: 0,
-            completed: false
-        },
-        {
-    name: 'Crusader',
-    svg: `
-        <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-            <!-- Helmet -->
-            <rect x="10" y="4" width="12" height="6" fill="#FFFFFF"/>
-            <rect x="12" y="10" width="8" height="2" fill="#FFD700"/>
-            
-            <!-- Face -->
-            <rect x="14" y="12" width="4" height="2" fill="#FDB863"/>
-            <rect x="15" y="12" width="2" height="1" fill="#000000"/>
-            
-            <!-- White and red armor body -->
-            <rect x="10" y="14" width="12" height="10" fill="#FFFFFF"/>
-            <rect x="12" y="16" width="8" height="6" fill="#FF0000"/>
-            <rect x="14" y="18" width="4" height="2" fill="#FFFFFF"/>
-            
-            <!-- Cloak -->
-            <rect x="8" y="14" width="2" height="12" fill="#800000"/>
-            <rect x="22" y="14" width="2" height="12" fill="#800000"/>
-            
-            <!-- Arms -->
-            <rect x="8" y="14" width="2" height="8" fill="#FFFFFF"/>
-            <rect x="22" y="14" width="2" height="8" fill="#FFFFFF"/>
-            
-            <!-- Legs -->
-            <rect x="10" y="24" width="4" height="6" fill="#FFFFFF"/>
-            <rect x="18" y="24" width="4" height="6" fill="#FFFFFF"/>
-            
-            <!-- Shield with cross -->
-            <rect x="6" y="16" width="6" height="8" fill="#FFD700"/>
-            <rect x="8" y="18" width="2" height="4" fill="#FF0000"/>
-            <rect x="7" y="19" width="4" height="2" fill="#FF0000"/>
-            
-            <!-- Sword -->
-            <rect x="24" y="14" width="2" height="10" fill="#C0C0C0"/>
-            <rect x="23" y="24" width="4" height="2" fill="#C0C0C0"/>
-        </svg>
-    `,
-    position: 0,
-    completed: false
-},
-{
-    name: 'White Knight',
-    svg: `
-        <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-            <!-- Horse body -->
-            <rect x="4" y="18" width="20" height="10" fill="#FFFFFF"/>
-            <rect x="24" y="20" width="4" height="8" fill="#FFFFFF"/>
-            <rect x="2" y="20" width="2" height="8" fill="#FFFFFF"/>
-            
-            <!-- Horse legs -->
-            <rect x="6" y="28" width="2" height="4" fill="#FFFFFF"/>
-            <rect x="10" y="28" width="2" height="4" fill="#FFFFFF"/>
-            <rect x="18" y="28" width="2" height="4" fill="#FFFFFF"/>
-            <rect x="22" y="28" width="2" height="4" fill="#FFFFFF"/>
-            
-            <!-- Horse mane -->
-            <rect x="20" y="16" width="6" height="4" fill="#E0E0E0"/>
-            
-            <!-- Knight body in shining silver armor -->
-            <rect x="16" y="6" width="8" height="12" fill="#C0C0C0"/>
-            <rect x="18" y="8" width="4" height="8" fill="#E0E0E0"/>
-            
-            <!-- Knight helmet -->
-            <rect x="16" y="2" width="8" height="4" fill="#C0C0C0"/>
-            <rect x="18" y="6" width="4" height="2" fill="#A0A0A0"/>
-            
-            <!-- Knight arms -->
-            <rect x="14" y="8" width="2" height="6" fill="#C0C0C0"/>
-            <rect x="24" y="8" width="2" height="6" fill="#C0C0C0"/>
-            
-            <!-- Flowing white cape -->
-            <rect x="14" y="6" width="2" height="12" fill="#FFFFFF"/>
-            <rect x="12" y="10" width="2" height="10" fill="#FFFFFF"/>
-            <rect x="10" y="14" width="2" height="8" fill="#FFFFFF"/>
-            
-            <!-- Lance -->
-            <rect x="26" y="2" width="2" height="18" fill="#A0A0A0"/>
-            <polygon points="27,0 29,2 25,2" fill="#A0A0A0"/>
-            
-            <!-- Knight legs -->
-            <rect x="16" y="18" width="4" height="4" fill="#C0C0C0"/>
-            <rect x="20" y="18" width="4" height="4" fill="#C0C0C0"/>
-        </svg>
-    `,
-    position: 0,
-    completed: false
-},
-{
-    name: 'Priest',
-    svg: `
-        <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-            <!-- Halo -->
-            <circle cx="16" cy="6" r="5" fill="#FFD700" opacity="0.7"/>
-            
-            <!-- Head and face -->
-            <rect x="12" y="6" width="8" height="8" fill="#FDB863"/>
-            <rect x="14" y="10" width="2" height="2" fill="#000000"/>
-            <rect x="18" y="10" width="2" height="2" fill="#000000"/>
-            
-            <!-- Beard -->
-            <rect x="12" y="14" width="8" height="4" fill="#A0522D"/>
-            <rect x="13" y="18" width="6" height="2" fill="#A0522D"/>
-            
-            <!-- Robe body - main color white with gold trim -->
-            <rect x="10" y="18" width="12" height="12" fill="#FFFFFF"/>
-            <rect x="9" y="18" width="1" height="12" fill="#FFD700"/>
-            <rect x="22" y="18" width="1" height="12" fill="#FFD700"/>
-            <rect x="10" y="29" width="12" height="1" fill="#FFD700"/>
-            
-            <!-- Arms -->
-            <rect x="8" y="18" width="4" height="8" fill="#FFFFFF"/>
-            <rect x="20" y="18" width="4" height="8" fill="#FFFFFF"/>
-            
-            <!-- Holy symbol (cross) -->
-            <rect x="13" y="22" width="6" height="6" fill="#FFD700"/>
-            <rect x="15" y="20" width="2" height="10" fill="#FFD700"/>
-            
-            <!-- Staff -->
-            <rect x="23" y="10" width="2" height="20" fill="#8B4513"/>
-            <rect x="22" y="8" width="4" height="2" fill="#8B4513"/>
-            <circle cx="24" cy="7" r="2" fill="#FFD700"/>
-            
-            <!-- Glowing aura -->
-            <rect x="0" y="0" width="32" height="32" fill="#FFFFFF" opacity="0.1"/>
-        </svg>
-    `,
-    position: 0,
-    completed: false
-},
-{
-    name: 'Wizard',
-    svg: `
-        <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-            <!-- Pointed hat with stars -->
-            <polygon points="16,0 10,12 22,12" fill="#4B0082"/>
-            <rect x="10" y="12" width="12" height="2" fill="#4B0082"/>
-            <rect x="13" y="5" width="2" height="2" fill="#FFD700"/>
-            <rect x="18" y="8" width="2" height="2" fill="#FFD700"/>
-            
-            <!-- Face -->
-            <rect x="12" y="14" width="8" height="6" fill="#FDB863"/>
-            <rect x="14" y="16" width="2" height="2" fill="#000000"/>
-            <rect x="18" y="16" width="2" height="2" fill="#000000"/>
-            
-            <!-- Long beard -->
-            <rect x="12" y="20" width="8" height="8" fill="#A0A0A0"/>
-            <rect x="13" y="28" width="6" height="2" fill="#A0A0A0"/>
-            <rect x="14" y="30" width="4" height="2" fill="#A0A0A0"/>
-            
-            <!-- Robe body in purple -->
-            <rect x="10" y="20" width="12" height="12" fill="#800080"/>
-            <rect x="8" y="20" width="2" height="10" fill="#800080"/>
-            <rect x="22" y="20" width="2" height="10" fill="#800080"/>
-            
-            <!-- Robe sleeves -->
-            <rect x="6" y="20" width="2" height="8" fill="#800080"/>
-            <rect x="24" y="20" width="2" height="8" fill="#800080"/>
-            
-            <!-- Staff -->
-            <rect x="4" y="12" width="2" height="18" fill="#8B4513"/>
-            <circle cx="5" cy="11" r="3" fill="#1E90FF"/>
-            
-            <!-- Spellbook -->
-            <rect x="24" y="24" width="6" height="8" fill="#8B4513"/>
-            <rect x="24" y="24" width="6" height="1" fill="#FFD700"/>
-            <rect x="24" y="27" width="6" height="1" fill="#FFD700"/>
-            <rect x="24" y="30" width="6" height="1" fill="#FFD700"/>
-            
-            <!-- Magical aura -->
-            <rect x="0" y="0" width="32" height="32" fill="#1E90FF" opacity="0.1"/>
-        </svg>
-    `,
-    position: 0,
-    completed: false
-}
+            {
+                name: 'Formosan Black Bear',
+                svg: `
+            <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                <!-- Bear body -->
+                <rect x="8" y="4" width="16" height="24" fill="#000000"/>
+                
+                <!-- White V-shaped chest marking -->
+                <polygon points="12,16 16,24 20,16" fill="#FFFFFF"/>
+                
+                <!-- Eyes -->
+                <rect x="12" y="8" width="2" height="2" fill="#FFFFFF"/>
+                <rect x="18" y="8" width="2" height="2" fill="#FFFFFF"/>
+                
+                <!-- Nose -->
+                <rect x="15" y="12" width="2" height="2" fill="#FFFFFF"/>
+                
+                <!-- Ears -->
+                <rect x="6" y="2" width="4" height="4" fill="#000000"/>
+                <rect x="22" y="2" width="4" height="4" fill="#000000"/>
+                
+                <!-- Arms -->
+                <rect x="6" y="14" width="2" height="8" fill="#000000"/>
+                <rect x="24" y="14" width="2" height="8" fill="#000000"/>
+                
+                <!-- Legs -->
+                <rect x="8" y="28" width="4" height="4" fill="#000000"/>
+                <rect x="20" y="28" width="4" height="4" fill="#000000"/>
+            </svg>
+        `,
+                position: 0,
+                completed: false
+            },
+            {
+                name: 'Formosan Blue Magpie',
+                svg: `
+            <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                <!-- Body -->
+                <rect x="8" y="8" width="16" height="12" fill="#4169E1"/>
+                
+                <!-- Head -->
+                <rect x="6" y="6" width="8" height="8" fill="#000000"/>
+                
+                <!-- Beak -->
+                <polygon points="4,10 6,11 6,13 4,14" fill="#FF4500"/>
+                
+                <!-- Eye -->
+                <rect x="8" y="8" width="2" height="2" fill="#FFFFFF"/>
+                <rect x="9" y="9" width="1" height="1" fill="#000000"/>
+                
+                <!-- Tail -->
+                <rect x="24" y="12" width="2" height="8" fill="#4169E1"/>
+                <rect x="26" y="14" width="2" height="6" fill="#4169E1"/>
+                <rect x="28" y="16" width="2" height="4" fill="#4169E1"/>
+                <rect x="30" y="18" width="2" height="2" fill="#FFFFFF"/>
+                
+                <!-- Legs -->
+                <rect x="12" y="20" width="2" height="4" fill="#FF0000"/>
+                <rect x="18" y="20" width="2" height="4" fill="#FF0000"/>
+                
+                <!-- Branch -->
+                <rect x="0" y="24" width="32" height="2" fill="#8B4513"/>
+            </svg>
+        `,
+                position: 0,
+                completed: false
+            },
+            {
+                name: 'Formosan Rock Macaque',
+                svg: `
+            <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                <!-- Body -->
+                <rect x="8" y="12" width="16" height="16" fill="#A9A9A9"/>
+                
+                <!-- Head -->
+                <rect x="10" y="6" width="12" height="10" fill="#A9A9A9"/>
+                
+                <!-- Face -->
+                <rect x="12" y="8" width="8" height="6" fill="#FFC0CB"/>
+                
+                <!-- Eyes -->
+                <rect x="13" y="10" width="2" height="2" fill="#8B4513"/>
+                <rect x="17" y="10" width="2" height="2" fill="#8B4513"/>
+                
+                <!-- Nose -->
+                <rect x="15" y="13" width="2" height="1" fill="#8B4513"/>
+                
+                <!-- Ears -->
+                <rect x="9" y="7" width="2" height="2" fill="#A9A9A9"/>
+                <rect x="21" y="7" width="2" height="2" fill="#A9A9A9"/>
+                
+                <!-- Arms -->
+                <rect x="6" y="14" width="2" height="8" fill="#A9A9A9"/>
+                <rect x="24" y="14" width="2" height="8" fill="#A9A9A9"/>
+                
+                <!-- Legs -->
+                <rect x="10" y="28" width="4" height="4" fill="#A9A9A9"/>
+                <rect x="18" y="28" width="4" height="4" fill="#A9A9A9"/>
+            </svg>
+        `,
+                position: 0,
+                completed: false
+            },
+            {
+                name: 'Leopard Cat',
+                svg: `
+            <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                <!-- Body -->
+                <rect x="6" y="10" width="20" height="12" fill="#D2B48C"/>
+                <rect x="8" y="22" width="16" height="2" fill="#D2B48C"/>
+                
+                <!-- Head -->
+                <rect x="22" y="8" width="8" height="8" fill="#D2B48C"/>
+                <polygon points="22,8 26,6 30,8" fill="#D2B48C"/>
+                
+                <!-- Ears -->
+                <polygon points="24,6 26,2 28,6" fill="#D2B48C"/>
+                <polygon points="28,6 30,2 30,6" fill="#D2B48C"/>
+                
+                <!-- Legs -->
+                <rect x="8" y="22" width="3" height="6" fill="#D2B48C"/>
+                <rect x="13" y="22" width="3" height="6" fill="#D2B48C"/>
+                <rect x="18" y="22" width="3" height="6" fill="#D2B48C"/>
+                <rect x="23" y="22" width="3" height="6" fill="#D2B48C"/>
+                
+                <!-- Longer Tail -->
+                <path d="M1,16 Q0,18 1,20 L4,20 C6,20 6,16 4,16 Z" fill="#D2B48C"/>
+                <path d="M4,16 Q3,18 4,20 L6,20 L6,16 Z" fill="#D2B48C"/>
+                
+                <!-- Spots -->
+                <circle cx="10" cy="14" r="1.5" fill="#8B4513"/>
+                <circle cx="16" cy="13" r="1.5" fill="#8B4513"/>
+                <circle cx="21" cy="15" r="1.5" fill="#8B4513"/>
+                <circle cx="13" cy="18" r="1.5" fill="#8B4513"/>
+                <circle cx="19" cy="19" r="1.5" fill="#8B4513"/>
+                <ellipse cx="24" cy="12" rx="1" ry="1.5" fill="#8B4513"/>
+                <circle cx="3" cy="18" r="1" fill="#8B4513"/>
+                
+                <!-- Face details -->
+                <circle cx="27" cy="11" r="1.5" fill="#FFD700"/> <!-- Eye -->
+                <circle cx="27.5" cy="11" r="0.5" fill="#000000"/> <!-- Pupil -->
+                <rect x="28" y="13" width="2" height="1" fill="#FFA07A"/> <!-- Nose -->
+                <path d="M28,14 Q29,15 30,14" fill="none" stroke="#000000" stroke-width="0.5"/> <!-- Mouth -->
+                
+                <!-- Whiskers -->
+                <line x1="30" y1="12" x2="32" y2="11" stroke="#FFFFFF" stroke-width="0.5"/>
+                <line x1="30" y1="13" x2="32" y2="13" stroke="#FFFFFF" stroke-width="0.5"/>
+                <line x1="30" y1="14" x2="32" y2="15" stroke="#FFFFFF" stroke-width="0.5"/>
+                
+                <!-- Paw details -->
+                <rect x="8" y="28" width="3" height="1" fill="#8B4513"/>
+                <rect x="13" y="28" width="3" height="1" fill="#8B4513"/>
+                <rect x="18" y="28" width="3" height="1" fill="#8B4513"/>
+                <rect x="23" y="28" width="3" height="1" fill="#8B4513"/>
+            </svg>
+        `,
+                position: 0,
+                completed: false
+            },
+            {
+                name: 'Taiwan Salmon',
+                svg: `
+            <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                <!-- Main body -->
+                <path d="M2,16 Q8,10 16,16 Q24,22 30,16 Q24,18 16,16 Q8,14 2,16 Z" fill="#FFF9C4"/>
+                
+                <!-- Head -->
+                <path d="M2,16 Q4,13 6,16 Q4,19 2,16 Z" fill="#FFD54F"/>
+                
+                <!-- Upper body accent -->
+                <path d="M6,14 Q12,10 18,14 Q24,18 28,14" fill="none" stroke="#FFD54F" stroke-width="2"/>
+                
+                <!-- Lower body accent -->
+                <path d="M6,18 Q12,22 18,18 Q24,14 28,18" fill="none" stroke="#FFD54F" stroke-width="2"/>
+                
+                <!-- Tail -->
+                <path d="M30,16 L32,12 V20 Z" fill="#FFD54F"/>
+                
+                <!-- Eye -->
+                <circle cx="4" cy="15" r="1.5" fill="#000000"/>
+                <circle cx="4" cy="15" r="0.5" fill="#FFFFFF"/>
+                
+                <!-- Mouth -->
+                <path d="M2,17 Q3,18 4,17" fill="none" stroke="#FF6D00" stroke-width="0.5"/>
+                
+                <!-- Spots -->
+                <circle cx="10" cy="16" r="0.75" fill="#FF6D00"/>
+                <circle cx="14" cy="16" r="0.75" fill="#FF6D00"/>
+                <circle cx="18" cy="16" r="0.75" fill="#FF6D00"/>
+                <circle cx="22" cy="16" r="0.75" fill="#FF6D00"/>
+                <circle cx="26" cy="16" r="0.75" fill="#FF6D00"/>
+            </svg>
+        `,
+                position: 0,
+                completed: false
+            },
+            {
+                name: 'Formosan Sika Deer',
+                svg: `
+            <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                <!-- Body -->
+                <rect x="6" y="12" width="20" height="12" fill="#8B4513"/>
+                
+                <!-- Neck -->
+                <rect x="22" y="8" width="6" height="6" fill="#8B4513"/>
+                
+                <!-- Head -->
+                <rect x="24" y="4" width="6" height="6" fill="#D2691E"/>
+                
+                <!-- Ears -->
+                <polygon points="24,4 26,2 28,4" fill="#D2691E"/>
+                <polygon points="28,4 30,2 30,4" fill="#D2691E"/>
+                
+                <!-- Antlers -->
+                <path d="M25,2 L23,0 M25,2 L27,0 M29,2 L31,0" stroke="#8B4513" stroke-width="0.5" fill="none"/>
+                
+                <!-- Legs -->
+                <rect x="8" y="24" width="2" height="6" fill="#8B4513"/>
+                <rect x="12" y="24" width="2" height="6" fill="#8B4513"/>
+                <rect x="18" y="24" width="2" height="6" fill="#8B4513"/>
+                <rect x="22" y="24" width="2" height="6" fill="#8B4513"/>
+                
+                <!-- Tail -->
+                <rect x="4" y="18" width="2" height="2" fill="#FFFFFF"/>
+                
+                <!-- Eye -->
+                <circle cx="27" cy="6" r="0.5" fill="#000000"/>
+                
+                <!-- Nose -->
+                <rect x="29" y="7" width="1" height="1" fill="#000000"/>
+                
+                <!-- Spots -->
+                <circle cx="10" cy="14" r="0.5" fill="#FFFFFF"/>
+                <circle cx="14" cy="16" r="0.5" fill="#FFFFFF"/>
+                <circle cx="18" cy="18" r="0.5" fill="#FFFFFF"/>
+                <circle cx="22" cy="15" r="0.5" fill="#FFFFFF"/>
+                <circle cx="12" cy="20" r="0.5" fill="#FFFFFF"/>
+                <circle cx="16" cy="13" r="0.5" fill="#FFFFFF"/>
+                <circle cx="20" cy="21" r="0.5" fill="#FFFFFF"/>
+            </svg>
+        `,
+                position: 0,
+                completed: false
+            }
         ];
-  
-        const questions = [
-    "What is your favorite food?", // GO
-    "Name a country you'd like to visit.", // Mediterranean Avenue
-    "What's your favorite book?", // Community Chest
-    "If you could have any superpower, what would it be?", // Baltic Avenue
-    "What's your favorite movie?", // Income Tax
-    "What's your dream job?", // Reading Railroad
-    "If you could meet any historical figure, who would it be?", // Oriental Avenue
-    "What's your favorite hobby?", // Chance
-    "What's the best gift you've ever received?", // Vermont Avenue
-    "If you could learn any skill instantly, what would it be?", // Jail
-    
-];
 
-// Fill remaining spaces with a default question if needed
-while (questions.length < boardSpaces.length) {
-    questions.push("What's your favorite color?");
-}
-  
-  
-  window.onload = function() {
-    if (loadGameState()) {
-        // If a saved state was loaded, update the board
-        characters.forEach((character, index) => {
-            updateCharacterPosition(index);
-        });
-        updateGameStatus();
-        updateCurrentCharacterDisplay();
-    } else {
-        
-    }
-};
+        const questions = [
+            "", // GO
+            "How do you greet others in your country?", // Pingtung (屏東)
+            "What social media do you usually use?", //  (Kaohsiung)
+            "What do you often eat for breakfast/lunch/dinner?", // Tainan (台南)
+            "What tourist attractions in your city would you recommend?", // Chiayi (嘉義)
+            "How long do you stay at school a day?", // Yunlin (雲林)
+            "What do you often do after school?", // Nantou (南投)
+            "", // Chance
+            "What's your favorite food?", // Changhua (彰化)
+            "", // Jail
+            "What's your favorite song/piece of music?", // Matsu (馬祖)
+            "", // Empty space
+            "", // Empty space
+            "", // Empty space
+            "", // Empty space
+            "", // Empty space
+            "", // Empty space
+            "", // Empty space
+            "", // Empty space
+            "Who is your favorite idol/singer/actor?", // Taichung (台中)
+            "What mobile games do you play?", // Kinmen (金門)
+            "", // Empty space
+            "", // Empty space
+            "", // Empty space
+            "", // Empty space
+            "", // Empty space
+            "", // Empty space
+            "", // Empty space
+            "", // Empty space
+            "Who is your favorite idol/singer/actor?", 
+            "How do you take out trash in your country?", // Orchid Island (蘭嶼)
+            "", // Empty space
+            "", // Empty space
+            "", // Empty space
+            "", // Empty space
+            "", // Empty space
+            "", // Empty space
+            "", // Empty space
+            "", // Empty space
+            "What do people in your country do to celebrate New Year/Christmas?", // Miaoli (苗栗)
+            "", // Chance
+            "", // Empty space
+            "", // Empty space
+            "", // Empty space
+            "", // Empty space
+            "", // Empty space
+            "", // Empty space
+            "", // Empty space
+            "", // Empty space
+            "How do you take exams in school?", // Hsinchu (新竹)
+            "How do you define whether someone is a successful person or not?", // Green Island (綠島)
+            "", // Empty space
+            "", // Empty space
+            "", // Empty space
+            "", // Empty space
+            "", // Empty space
+            "", // Empty space
+            "", // Empty space
+            "", // Empty space
+            "How do you go to school?", // Taoyuan (桃園)
+            "", // Free Parking
+            "How do people celebrate birthdays in your country?", // Penghu (澎湖)
+            "", // Chance
+            "How do people say \"Thank you\" in your country?", // Taitung (台東)
+            "What kind of weather is most common in your city?", // Hualien (花蓮)
+            "What traditional festivals do you celebrate in your country, and how do you celebrate them?", // Yilan (宜蘭)
+            "What is your favorite subject in school? Why?", // Keelung (基隆)
+            "", // Chance
+            "21. What is your dream job?", // New Taipei (新北)
+            "", // Go to Jail
+
+        ];
+
+        // Fill remaining spaces with a default question if needed
+        while (questions.length < boardSpaces.length) {
+            questions.push("What's your favorite color?");
+        }
+
+
+        window.onload = function () {
+            if (loadGameState()) {
+                // If a saved state was loaded, update the board
+                characters.forEach((character, index) => {
+                    updateCharacterPosition(index);
+                });
+                updateGameStatus();
+                updateCurrentCharacterDisplay();
+            } else {
+
+            }
+        };
 
         let currentCharacter = 0;
         let gameOver = false;
 
         function resetGame() {
-    localStorage.removeItem('monopolyGameState');
-    location.reload();
-}
-  
+            localStorage.removeItem('monopolyGameState');
+            location.reload();
+        }
+
         function createCharacters() {
             const boardElement = document.querySelector('.board');
             characters.forEach((character, index) => {
@@ -654,127 +888,141 @@ while (questions.length < boardSpaces.length) {
             characterElement.style.left = `${rect.left - boardRect.left + rect.width / 2 - 32 + offset}px`;
             characterElement.style.top = `${rect.top - boardRect.top + rect.height / 2 - 32 + (characterIndex < 3 ? -10 : 10)}px`;
         }
-        
-  
-  
+
+
+
         function rollDice() {
-      if (gameOver) {
-          alert("The game is over. All characters have completed one round!");
-          return;
-      }
-  
-      const diceContainer = document.getElementById('diceContainer');
-      const dice = diceContainer.querySelector('.dice');
-      diceContainer.style.display = 'block';
-      dice.classList.add('dice-rolling');
-      
-      setTimeout(() => {
-          dice.classList.remove('dice-rolling');
-          const roll = Math.floor(Math.random() * 6) + 1;
-          
-          // Set the final rotation of the dice
-          switch(roll) {
-              case 1: dice.style.transform = 'rotateX(0deg) rotateY(0deg)'; break;
-              case 2: dice.style.transform = 'rotateY(-90deg)'; break;
-              case 3: dice.style.transform = 'rotateX(90deg)'; break;
-              case 4: dice.style.transform = 'rotateX(-90deg)'; break;
-              case 5: dice.style.transform = 'rotateY(90deg)'; break;
-              case 6: dice.style.transform = 'rotateX(180deg)'; break;
-          }
-          
-          setTimeout(() => {
-              diceContainer.style.display = 'none';
-              moveCharacter(roll);
-          }, 1500);
-      }, 1000);
-  }
-  
-  
-  function moveCharacter(roll) {
-    const character = characters[currentCharacter];
-    const previousPosition = character.position;
-    character.position = (character.position + roll) % boardSpaces.length;
-    
-    updateCharacterPosition(currentCharacter);
-    
-    const spaceIndex = boardSpaces[character.position];
-    const spaceName = document.querySelectorAll('.board .space')[spaceIndex].textContent;
-    
-    let message = `${character.name} rolled a ${roll} and moved to ${spaceName}`;
-    
-    // Check if the character has passed or landed on GO
-    if (previousPosition > character.position || character.position === 0) {
-        character.completed = true;
-        message += ". This character has completed one round!";
-    }
+            if (gameOver) {
+                alert("The game is over. All characters have completed one round!");
+                return;
+            }
 
-    showQuestion(spaceIndex);
-    saveGameState();
-}
+            const diceContainer = document.getElementById('diceContainer');
+            const dice = diceContainer.querySelector('.dice');
+            diceContainer.style.display = 'block';
+            dice.classList.add('dice-rolling');
 
-function showQuestion(spaceIndex) {
+            setTimeout(() => {
+                dice.classList.remove('dice-rolling');
+                const roll = Math.floor(Math.random() * 6) + 1;
+
+                // Set the final rotation of the dice
+                switch (roll) {
+                    case 1: dice.style.transform = 'rotateX(0deg) rotateY(0deg)'; break;
+                    case 2: dice.style.transform = 'rotateY(-90deg)'; break;
+                    case 3: dice.style.transform = 'rotateX(90deg)'; break;
+                    case 4: dice.style.transform = 'rotateX(-90deg)'; break;
+                    case 5: dice.style.transform = 'rotateY(90deg)'; break;
+                    case 6: dice.style.transform = 'rotateX(180deg)'; break;
+                }
+
+                setTimeout(() => {
+                    diceContainer.style.display = 'none';
+                    moveCharacter(roll);
+                }, 1500);
+            }, 1000);
+        }
+
+
+        function moveCharacter(roll) {
+            const character = characters[currentCharacter];
+            const previousPosition = character.position;
+            character.position = (character.position + roll) % boardSpaces.length;
+
+            updateCharacterPosition(currentCharacter);
+
+            const spaceIndex = boardSpaces[character.position];
+            const spaceName = document.querySelectorAll('.board .space')[spaceIndex].textContent;
+
+            let message = `${character.name} rolled a ${roll} and moved to ${spaceName}`;
+
+            // Check if the character has passed or landed on GO
+            if (previousPosition > character.position || character.position === 0) {
+                character.completed = true;
+                message += ". This character has completed one round!";
+            }
+
+            showQuestion(spaceIndex);
+            saveGameState();
+        }
+
+        function showQuestion(spaceIndex) {
     const modal = document.getElementById('questionModal');
     const questionText = document.getElementById('questionText');
-    
-    questionText.textContent = questions[spaceIndex];
+    const spaceElement = document.querySelectorAll('.board .space')[spaceIndex];
+    const spaceName = spaceElement.textContent.trim();
+    const question = questions[spaceIndex];
+    const currentCharacterName = characters[currentCharacter].name;
+
+    if (question === "") {
+        // （GO, Chance, Jail）
+        if (spaceName && spaceName !== "") {
+            questionText.textContent = `${currentCharacterName}\n\nYou are landed on  ${spaceName}!`;
+        } else {
+            questionText.textContent = `${currentCharacterName}\n\n你來到了一個空白格子。`;
+        }
+    } else {
+        questionText.textContent = `${currentCharacterName}\n\n:\n\n${question}`;
+    }
+
     modal.style.display = "block";
 }
-  
-function continueGame() {
-    checkGameStatus();
-    
-    if (!gameOver) {
-        do {
-            currentCharacter = (currentCharacter + 1) % characters.length;
-        } while (characters[currentCharacter].completed);
-    }
 
-    updateGameStatus();
-    updateCurrentCharacterDisplay();
-    saveGameState();
-}
+        function continueGame() {
+            checkGameStatus();
+
+            if (!gameOver) {
+                do {
+                    currentCharacter = (currentCharacter + 1) % characters.length;
+                } while (characters[currentCharacter].completed);
+            }
+
+            updateGameStatus();
+            updateCurrentCharacterDisplay();
+            saveGameState();
+        }
 
 
-// Close the modal when clicking on <span> (x)
-document.querySelector('.close').onclick = function() {
-    const modal = document.getElementById('questionModal');
-    modal.style.display = "none";
-    continueGame();
-}
+        // Close the modal when clicking on <span> (x)
+        document.querySelector('.close').onclick = function () {
+            const modal = document.getElementById('questionModal');
+            modal.style.display = "none";
+            continueGame();
+        }
 
-// Close the modal if the user clicks outside of it
-window.onclick = function(event) {
-    const modal = document.getElementById('questionModal');
-    if (event.target == modal) {
-        modal.style.display = "none";
-        continueGame();
-    }
-}
-      
-       function saveGameState() {
-    const gameState = {
-        characters: characters,
-        currentCharacter: currentCharacter,
-        gameOver: gameOver
-    };
-    localStorage.setItem('monopolyGameState', JSON.stringify(gameState));
-}
+        // Close the modal if the user clicks outside of it
+        window.onclick = function (event) {
+            const modal = document.getElementById('questionModal');
+            if (event.target == modal) {
+                modal.style.display = "none";
+                continueGame();
+            }
+        }
 
-function loadGameState() {
-    const savedState = localStorage.getItem('monopolyGameState');
-    if (savedState) {
-        const gameState = JSON.parse(savedState);
-        characters = gameState.characters;
-        currentCharacter = gameState.currentCharacter;
-        gameOver = gameState.gameOver;
-        return true;
-    }
-    return false;
-}
-  
-  
-  
-  
+        function saveGameState() {
+            const gameState = {
+                characters: characters,
+                currentCharacter: currentCharacter,
+                gameOver: gameOver
+            };
+            localStorage.setItem('monopolyGameState', JSON.stringify(gameState));
+        }
+
+        function loadGameState() {
+            const savedState = localStorage.getItem('monopolyGameState');
+            if (savedState) {
+                const gameState = JSON.parse(savedState);
+                characters = gameState.characters;
+                currentCharacter = gameState.currentCharacter;
+                gameOver = gameState.gameOver;
+                return true;
+            }
+            return false;
+        }
+
+
+
+
         function checkGameStatus() {
             if (characters.every(character => character.completed)) {
                 gameOver = true;
@@ -809,4 +1057,5 @@ function loadGameState() {
         updateCurrentCharacterDisplay();
     </script>
 </body>
+
 </html>
