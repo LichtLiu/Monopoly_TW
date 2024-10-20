@@ -940,55 +940,69 @@
 
 
         function moveCharacter(roll) {
-            const character = characters[currentCharacter];
-            const previousPosition = character.position;
+    const character = characters[currentCharacter];
+    const previousPosition = character.position;
 
-            // Update the position
-            character.position = (character.position + roll) % boardSpaces.length;
+    // Update the position
+    character.position = (character.position + roll) % boardSpaces.length;
 
-            // Get the actual space index on the board
-            const spaceIndex = boardSpaces[character.position];
+    // Get the actual space index on the board
+    let spaceIndex = boardSpaces[character.position];
 
-            updateCharacterPosition(currentCharacter);
+    // Check if the character landed on position 69 (Go To Jail)
+    if (spaceIndex === 69) {
+        character.position = boardSpaces.indexOf(9); // Move to Jail (position 9)
+        spaceIndex = 9;
+    }
 
-            const spaceElement = document.querySelectorAll('.board .space')[spaceIndex];
-            const spaceName = spaceElement.textContent.trim();
+    updateCharacterPosition(currentCharacter);
 
-            let message = `${character.name} rolled a ${roll} and moved to ${spaceName}`;
+    const spaceElement = document.querySelectorAll('.board .space')[spaceIndex];
+    const spaceName = spaceElement.textContent.trim();
 
-            // Check if the character has passed or landed on GO
-            if (previousPosition > character.position) {
-                character.completed = true;
-                message += ". This character has completed one round!";
-            }
+    let message = `${character.name} rolled a ${roll} and moved to ${spaceName}`;
 
-            showQuestion(spaceIndex);
-            saveGameState();
+    // Check if the character has passed or landed on GO
+    if (previousPosition > character.position && spaceIndex !== 9) {
+        character.completed = true;
+        message += ". This character has completed one round!";
+    }
 
-            console.log(message); // This will help you debug
-        }
+    if (spaceIndex === 9 && boardSpaces[previousPosition] === 69) {
+        message += " (Moved to Jail from Go To Jail)";
+    }
 
-        function showQuestion(spaceIndex) {
-            const modal = document.getElementById('questionModal');
-            const questionText = document.getElementById('questionText');
-            const spaceElement = document.querySelectorAll('.board .space')[spaceIndex];
-            const spaceName = spaceElement.textContent.trim();
-            const question = questions[spaceIndex];
-            const currentCharacterName = characters[currentCharacter].name;
+    showQuestion(spaceIndex);
+    saveGameState();
 
-            if (question === "") {
-                // （GO, Chance, Jail）
-                if (spaceName && spaceName !== "") {
-                    questionText.textContent = `${currentCharacterName}\n\nYou are landed on  ${spaceName}!`;
-                } else {
-                    questionText.textContent = `${currentCharacterName}\n\n你來到了一個空白格子。`;
-                }
+    console.log(message); // This will help you debug
+}
+
+function showQuestion(spaceIndex) {
+    const modal = document.getElementById('questionModal');
+    const questionText = document.getElementById('questionText');
+    const spaceElement = document.querySelectorAll('.board .space')[spaceIndex];
+    const spaceName = spaceElement.textContent.trim();
+    const question = questions[spaceIndex];
+    const currentCharacterName = characters[currentCharacter].name;
+
+    if (question === "") {
+        // (GO, Chance, Jail, Go To Jail)
+        if (spaceName && spaceName !== "") {
+            if (spaceIndex === 9 && boardSpaces[characters[currentCharacter].position] === 69) {
+                questionText.textContent = `${currentCharacterName}\n\nYou landed on Go To Jail and moved to Jail!`;
             } else {
-                questionText.textContent = `${currentCharacterName}\n\n:\n\n${question}`;
+                questionText.textContent = `${currentCharacterName}\n\nYou landed on ${spaceName}!`;
             }
-
-            modal.style.display = "block";
+        } else {
+            questionText.textContent = `${currentCharacterName}\n\n你來到了一個空白格子。`;
         }
+    } else {
+        questionText.textContent = `${currentCharacterName}\n\n:\n\n${question}`;
+    }
+
+    modal.style.display = "block";
+}
 
         function continueGame() {
             checkGameStatus();
