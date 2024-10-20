@@ -397,7 +397,7 @@
                 <div class="space" style="background-color: #FFF;"></div>
                 <div class="space" style="background-color: #FFF;"></div>
                 <div class="space" style="background-color: #FFF;"></div>
-                <div class="space property">Taichung <br>(台中)</div>
+                <div class="space utility">Chance</div>
 
                 <div class="space property">Kinmen <br>(金門)</div>
                 <div class="space" style="background-color: #FFF;"></div>
@@ -408,7 +408,7 @@
                 <div class="space" style="background-color: #FFF;"></div>
                 <div class="space" style="background-color: #FFF;"></div>
                 <div class="space" style="background-color: #FFF;"></div>
-                <div class="space utility">Chance</div>
+                <div class="space property">Taichung <br>(台中)</div>
 
                 <div class="space property">Orchid Island <br>(蘭嶼)</div>
                 <div class="space" style="background-color: #FFF;"></div>
@@ -510,8 +510,8 @@
     <script>
         const boardSpaces = [
             0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
-            19, 29, 39, 49, 59, 69, 79,
-            78, 77, 76, 75, 74, 73, 72, 71, 70,
+            19, 29, 39, 49, 59, 69,
+            68, 67, 66, 65, 64, 63, 62, 61,
             60, 50, 40, 30, 20, 10
         ];
 
@@ -782,7 +782,7 @@
             "", // Empty space
             "", // Empty space
             "", // Empty space
-            "Who is your favorite idol/singer/actor?", // Taichung (台中)
+            "", // Chance
             "What mobile games do you play?", // Kinmen (金門)
             "", // Empty space
             "", // Empty space
@@ -792,7 +792,7 @@
             "", // Empty space
             "", // Empty space
             "", // Empty space
-            "Who is your favorite idol/singer/actor?", 
+            "Who is your favorite idol/singer/actor?",
             "How do you take out trash in your country?", // Orchid Island (蘭嶼)
             "", // Empty space
             "", // Empty space
@@ -831,7 +831,7 @@
             "What traditional festivals do you celebrate in your country, and how do you celebrate them?", // Yilan (宜蘭)
             "What is your favorite subject in school? Why?", // Keelung (基隆)
             "", // Chance
-            "21. What is your dream job?", // New Taipei (新北)
+            "What is your dream job?", // New Taipei (新北)
             "", // Go to Jail
 
         ];
@@ -885,8 +885,23 @@
 
             // Adjust position based on character index to avoid overlap
             const offset = 10 * (characterIndex % 3 - 1);
-            characterElement.style.left = `${rect.left - boardRect.left + rect.width / 2 - 32 + offset}px`;
-            characterElement.style.top = `${rect.top - boardRect.top + rect.height / 2 - 32 + (characterIndex < 3 ? -10 : 10)}px`;
+            let left = rect.left - boardRect.left + rect.width / 2 - 32 + offset;
+            let top = rect.top - boardRect.top + rect.height / 2 - 32;
+
+            // Adjust vertical position for top and bottom rows
+            if (spaceIndex < 10 || (spaceIndex >= 70 && spaceIndex < 80)) {
+                top += (characterIndex < 3 ? -10 : 10);
+            }
+
+            // Adjust horizontal position for left and right columns
+            if (spaceIndex % 10 === 0 || spaceIndex % 10 === 9) {
+                left += (characterIndex < 3 ? -10 : 10);
+            }
+
+            characterElement.style.left = `${left}px`;
+            characterElement.style.top = `${top}px`;
+
+            console.log(`Character ${characterIndex} moved to space ${spaceIndex} (${left}, ${top})`); // This will help you debug
         }
 
 
@@ -927,46 +942,53 @@
         function moveCharacter(roll) {
             const character = characters[currentCharacter];
             const previousPosition = character.position;
+
+            // Update the position
             character.position = (character.position + roll) % boardSpaces.length;
+
+            // Get the actual space index on the board
+            const spaceIndex = boardSpaces[character.position];
 
             updateCharacterPosition(currentCharacter);
 
-            const spaceIndex = boardSpaces[character.position];
-            const spaceName = document.querySelectorAll('.board .space')[spaceIndex].textContent;
+            const spaceElement = document.querySelectorAll('.board .space')[spaceIndex];
+            const spaceName = spaceElement.textContent.trim();
 
             let message = `${character.name} rolled a ${roll} and moved to ${spaceName}`;
 
             // Check if the character has passed or landed on GO
-            if (previousPosition > character.position || character.position === 0) {
+            if (previousPosition > character.position) {
                 character.completed = true;
                 message += ". This character has completed one round!";
             }
 
             showQuestion(spaceIndex);
             saveGameState();
+
+            console.log(message); // This will help you debug
         }
 
         function showQuestion(spaceIndex) {
-    const modal = document.getElementById('questionModal');
-    const questionText = document.getElementById('questionText');
-    const spaceElement = document.querySelectorAll('.board .space')[spaceIndex];
-    const spaceName = spaceElement.textContent.trim();
-    const question = questions[spaceIndex];
-    const currentCharacterName = characters[currentCharacter].name;
+            const modal = document.getElementById('questionModal');
+            const questionText = document.getElementById('questionText');
+            const spaceElement = document.querySelectorAll('.board .space')[spaceIndex];
+            const spaceName = spaceElement.textContent.trim();
+            const question = questions[spaceIndex];
+            const currentCharacterName = characters[currentCharacter].name;
 
-    if (question === "") {
-        // （GO, Chance, Jail）
-        if (spaceName && spaceName !== "") {
-            questionText.textContent = `${currentCharacterName}\n\nYou are landed on  ${spaceName}!`;
-        } else {
-            questionText.textContent = `${currentCharacterName}\n\n你來到了一個空白格子。`;
+            if (question === "") {
+                // （GO, Chance, Jail）
+                if (spaceName && spaceName !== "") {
+                    questionText.textContent = `${currentCharacterName}\n\nYou are landed on  ${spaceName}!`;
+                } else {
+                    questionText.textContent = `${currentCharacterName}\n\n你來到了一個空白格子。`;
+                }
+            } else {
+                questionText.textContent = `${currentCharacterName}\n\n:\n\n${question}`;
+            }
+
+            modal.style.display = "block";
         }
-    } else {
-        questionText.textContent = `${currentCharacterName}\n\n:\n\n${question}`;
-    }
-
-    modal.style.display = "block";
-}
 
         function continueGame() {
             checkGameStatus();
